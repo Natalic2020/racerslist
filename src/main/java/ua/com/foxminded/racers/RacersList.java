@@ -21,18 +21,14 @@ public class RacersList {
 	private static final String TIME_SEPARATOR = "%";
 	private static final String PATTERN_DATA_TIME = "yyyy-MM-dd HH:mm:ss.SSS";
 
-	public String formRacersList(String fileStart, String fileEnd, String fileAbbreviations) {
-		
-		boolean hasFileStart = checkFile(fileStart);
-		if (!hasFileStart) {
+	public String formRacersList(String fileStart, String fileEnd, String fileAbbreviations) {	
+		if (!checkFile(fileStart)) {
 			return "";
 		}
-		boolean hasFileEnd = checkFile(fileEnd);
-		if (!hasFileEnd) {
+		if (!checkFile(fileEnd)) {
 			return "";
 		}
-		boolean hasFileAbbrt = checkFile(fileAbbreviations);
-		if (!hasFileAbbrt) {
+		if (!checkFile(fileAbbreviations)) {
 			return "";
 		}
 		Map<String, String> mapStart = convertFileToMap(fileStart);	

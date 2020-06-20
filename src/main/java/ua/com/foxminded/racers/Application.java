@@ -1,18 +1,22 @@
 package ua.com.foxminded.racers;
 
-import java.io.IOException;
+import java.io.File;
 
 public class Application {
 
 	public static void main(String[] args) {
-		String fileStart = "c://Курсы//start.log";
-		String fileEnd = "c://Курсы//end.log";
-		String fileAbbreviations = "c://Курсы//abbreviations.txt";
-			
-		RacersList racersList = new RacersList();
-		
-			System.out.println(racersList.formRacersList(fileStart, fileEnd, fileAbbreviations));
-		
-	}
+		String path = "src/main/resources";	        
+	    File file = new File(path);
+	    String absolutePathStart = file.getAbsolutePath() + "\\start.log";
+        String absolutePathEnd = file.getAbsolutePath() + "\\end.log";
+        String absolutePathAbbr = file.getAbsolutePath() + "\\abbreviations.txt";
 
+		RacersList racersList = new RacersList();
+	
+		try {
+			System.out.println(racersList.formRacersList(absolutePathStart, absolutePathEnd, absolutePathAbbr));
+		} catch (IllegalArgumentException e) {
+			System.out.println("Invalid  input:\"" + e.getMessage() + "\"");
+		}		
+	}
 }

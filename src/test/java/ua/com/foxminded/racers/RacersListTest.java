@@ -35,9 +35,6 @@ class RacersListTest {
 	
 	 @Test
 	    public void testReadFileWithClassLoader(){
-	        ClassLoader classLoader = this.getClass().getClassLoader();
-	        
-	       
 	        String absolutePathStart = file.getAbsolutePath() + "\\start.log";
 	        String absolutePathEnd = file.getAbsolutePath() + "\\end.log";
 	        String absolutePathAbbr = file.getAbsolutePath() + "\\abbreviations.txt";
@@ -66,9 +63,7 @@ class RacersListTest {
 	        		" 1. Marcus Ericsson    | SAUBER FERRARI                | 1:13.265",  // 
 	        		" 1. Lance Stroll       | WILLIAMS MERCEDES             | 1:13.323",  // 
 	        		" 1. Kevin Magnussen    | HAAS FERRARI                  | 1:13.393",  // 
-	        		""); //
-	      
+	        		""); //     
 	        assertEquals(expected, actual);
 	    }
-
 }
