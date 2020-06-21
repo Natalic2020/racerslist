@@ -14,7 +14,7 @@ public class Application {
 		RacersList racersList = new RacersList();
 	
 		try {
-			System.out.println(racersList.formRacersList(absolutePathStart, absolutePathEnd, absolutePathAbbr));
+			racersList.formRacersList(absolutePathStart, absolutePathEnd, absolutePathAbbr).forEach(x->{System.out.println(x);});
 		} catch (IllegalArgumentException e) {
 			System.out.println("Invalid  input:\"" + e.getMessage() + "\"");
 		}		
