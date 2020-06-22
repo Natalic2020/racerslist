@@ -22,6 +22,12 @@ public class RacersList {
 			return Stream.empty();
 		}
 
+		List<RacerData> racerDataList = formRacerList(fileStart, fileEnd, fileAbbreviations);
+		racerDataList.sort(Comparator.comparing(RacerData::getRacerTime));
+		return formOutputListRacers(racerDataList);
+	}
+
+	private List<RacerData> formRacerList(String fileStart, String fileEnd, String fileAbbreviations) {
 		Stream<String> abbrStream = receiveStream(fileAbbreviations);
 		List<RacerData> racerDataList = abbrStream.map(temp -> new RacerData(temp)).collect(Collectors.toList());
 		
@@ -42,8 +48,7 @@ public class RacersList {
 				}
 			}
 		});
-		racerDataList.sort(Comparator.comparing(RacerData::getRacerTime));
-		return formOutputListRacers(racerDataList);
+		return racerDataList;
 	}
 
 	private Stream<String> formOutputListRacers(List<RacerData> racerDataList) {
