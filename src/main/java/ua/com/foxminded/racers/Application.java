@@ -11,7 +11,10 @@ public class Application {
 		RacersList racersList = new RacersList();
 	
 		try {
-			racersList.formRacersList(fileStart, fileEnd, fileAbbr).forEach(x->{System.out.print(x);});
+			racersList.formRacersList(fileStart, fileEnd, fileAbbr)
+			          .forEach(x->
+			          {System.out.print(x);
+			          });
 		} catch (IllegalArgumentException e) {
 			System.out.println("Invalid  input:\"" + e.getMessage() + "\"");
 		}		

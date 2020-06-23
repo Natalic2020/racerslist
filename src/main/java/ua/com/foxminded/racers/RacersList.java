@@ -43,7 +43,10 @@ public class RacersList {
 
 		List<RacerData> racerDataList;
 		try (Stream<String> fileInStream = Files.lines(Paths.get(fileAbbreviations))) {
-			racerDataList = fileInStream.map(temp -> new RacerData(temp)).collect(Collectors.toList());
+			racerDataList = fileInStream
+					        .map(temp ->
+			                     new RacerData(temp))
+					        .collect(Collectors.toList());
 		} catch (IOException e) {
 			racerDataList = new ArrayList<>();
 			e.printStackTrace();
@@ -52,14 +55,20 @@ public class RacersList {
 		Map<String, String> mapStart = convertFileToMap(fileStart);
 		Map<String, String> mapEnd = convertFileToMap(fileEnd);
 
-		Map<String, String> mapTime = Stream.of(mapStart, mapEnd).flatMap(m -> m.entrySet().stream())
-				.collect(Collectors.toMap(Entry::getKey, Entry::getValue, (o1, o2) -> o1 + o2));
+		Map<String, String> mapTime = Stream.of(mapStart, mapEnd)
+				                      .flatMap(m -> 
+				                               m.entrySet().stream())
+				                      .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (o1, o2) -> o1 + o2));
 
-		List<RacerData> racerDataListSorted = racerDataList.stream().filter(s -> !mapTime.get(s.getAbbr()).isEmpty())
+		List<RacerData> racerDataListSorted = racerDataList.stream()
+				.filter(s -> 
+				        !mapTime.get(s.getAbbr()).isEmpty())
 				.map(s -> {
 					s.setRacerTime(reseiveTime(mapTime.get(s.getAbbr())));
 					return s;
-				}).sorted(Comparator.comparing(RacerData::getRacerTime)).collect(Collectors.toList());
+				})
+				.sorted(Comparator.comparing(RacerData::getRacerTime))
+				.collect(Collectors.toList());
 
 		return racerDataListSorted;
 	}
@@ -77,7 +86,8 @@ public class RacersList {
 	private Map<String, String> convertFileToMap(String file) {
 		Map<String, String> mapAbbreviations = new HashMap<>();
 		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
-			mapAbbreviations = fileInStream.collect(Collectors.toMap(i -> i.substring(0, 3), i -> i.substring(3)));
+			mapAbbreviations = fileInStream
+					.collect(Collectors.toMap(i -> i.substring(0, 3), i -> i.substring(3)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
