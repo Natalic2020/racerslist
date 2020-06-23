@@ -43,20 +43,27 @@ public class RacerData {
 	public LocalDateTime getStartTime() {
 		return startTime;
 	}
-	public void setStartTime(String startTime) {
-		this.startTime = convertStringToLocalDT(startTime);
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
 	}
 	public LocalDateTime getEndTime() {
 		return endTime;
 	}
-	public void setEndTime(String endTime) {
-		this.endTime = convertStringToLocalDT(endTime);
+	public void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
 	}
 	public Duration getRacerTime() {
 		return racerTime;
 	}
 	public void setRacerTime() {
 		this.racerTime = Duration.between(this.startTime, this.endTime);
+	}
+	
+	public void setTime (String timeString , boolean isStartTime  ) {
+		if (isStartTime) {
+			setStartTime(convertStringToLocalDT(timeString));
+		}
+		setEndTime(convertStringToLocalDT(timeString));
 	}
 	
 	private LocalDateTime convertStringToLocalDT(String text) {
@@ -66,7 +73,5 @@ public class RacerData {
 	@Override
 	public String toString() {
 		return String.format("%0$-19s| %0$-30s| %s",  name, car, racerTime.toString().replace("PT", "").replace("M", ":").replace("S", ""));
-	}	
-	
-	
+	}		
 }

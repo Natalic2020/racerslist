@@ -10,15 +10,13 @@ import org.junit.jupiter.api.Test;
 
 class RacersListTest {
 
-	RacersList racersList = new RacersList();
-	String path = "src/test/resources";	        
-    File file = new File(path);
+	RacersList racersList = new RacersList();       
 	
 	@Test
     void formRacersList_shouldThrowIllegalArgumentException_whenInputNull() {
 		final String absolutePathStart = null;
-        final String absolutePathEnd = file.getAbsolutePath() + "\\end.log";
-        final String absolutePathAbbr = file.getAbsolutePath() + "\\abbreviations.txt";
+		 String absolutePathEnd = "end.log";
+	     String absolutePathAbbr = "abbreviations.txt";
         assertThrows(IllegalArgumentException.class, () -> {
         	racersList.formRacersList(absolutePathStart, absolutePathEnd, absolutePathAbbr);;
         });
@@ -27,8 +25,8 @@ class RacersListTest {
     @Test
     void formRacersList_shouldThrowIllegalArgumentException_whenInputEmptyString() {
     	final String absolutePathStart = "";
-        final String absolutePathEnd = file.getAbsolutePath() + "\\end.log";
-        final String absolutePathAbbr = file.getAbsolutePath() + "\\abbreviations.txt";
+    	 String absolutePathEnd = "end.log";
+	     String absolutePathAbbr = "abbreviations.txt";
         assertThrows(IllegalArgumentException.class, () -> {
         	racersList.formRacersList(absolutePathStart, absolutePathEnd, absolutePathAbbr);;
         });
@@ -36,9 +34,10 @@ class RacersListTest {
 	
 	 @Test
 	    public void testReadFileWithClassLoader(){
-	        String absolutePathStart = file.getAbsolutePath() + "\\start.log";
-	        String absolutePathEnd = file.getAbsolutePath() + "\\end.log";
-	        String absolutePathAbbr = file.getAbsolutePath() + "\\abbreviations.txt";
+		
+	        String absolutePathStart = "start.log";
+	        String absolutePathEnd = "end.log";
+	        String absolutePathAbbr = "abbreviations.txt";
 	        String actual = "";
 	        
 		    actual = racersList.formRacersList(absolutePathStart, absolutePathEnd, absolutePathAbbr).collect(Collectors.joining());
@@ -67,4 +66,9 @@ class RacersListTest {
 	        		""); //     
 	        assertEquals(expected, actual);
 	    }
+	 
+	 private String reseivePath(String file) {
+			return getClass().getClassLoader().getResource(file).getPath().substring(1);
+		}
+	 
 }
