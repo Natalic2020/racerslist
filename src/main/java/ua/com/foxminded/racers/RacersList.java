@@ -56,13 +56,12 @@ public class RacersList {
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue, (o1,
 						o2) -> o1 + o2));
 		
-		racerDataList.stream().filter(s -> !mapTime.get(s.getAbbr()).isEmpty()).forEach(s-> 
-			s.setRacerTime(reseiveTime(mapTime.get(s.getAbbr())))
-			);
+		List<RacerData> racerDataListSorted = racerDataList.stream().filter(s -> !mapTime.get(s.getAbbr()).isEmpty())
+			.map(s->{s.setRacerTime(reseiveTime(mapTime.get(s.getAbbr())));
+				return s;})
+			.sorted(Comparator.comparing(RacerData::getRacerTime)).collect(Collectors.toList());
 		
-		racerDataList.sort(Comparator.comparing(RacerData::getRacerTime));
-		
-		return racerDataList;
+		return racerDataListSorted;
 	}
 	
 	private Duration reseiveTime(String time) {
