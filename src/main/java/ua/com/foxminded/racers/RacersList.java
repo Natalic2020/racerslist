@@ -107,7 +107,9 @@ public class RacersList {
 	}
 
 	private Stream<String> formOutputListRacers(List<RacerData> racerDataList, int start, int end) {
-		return IntStream.range(start - 1, end).mapToObj(i -> {
+		return IntStream
+				.range(start - 1, end)
+				.mapToObj(i -> {
 			RacerData racer = racerDataList.get(i);
 			return String.format("%2d. %s%n", i + 1, racer.toString());
 		});
