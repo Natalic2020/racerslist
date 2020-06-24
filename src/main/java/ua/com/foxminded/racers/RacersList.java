@@ -1,15 +1,7 @@
 package ua.com.foxminded.racers;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,8 +10,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class RacersList {
-
-	private static final String PATTERN_DATA_TIME = "yyyy-MM-dd HH:mm:ss.SSS";
 
 	public Stream<String> formRacersList(String fileStart, String fileEnd, String fileAbbreviations) {
 		if (!checkFile(fileStart)) {
@@ -41,19 +31,11 @@ public class RacersList {
 		String fileEnd = reseivePath(fileEndName);
 		String fileAbbreviations = reseivePath(fileAbbreviationsName);
 
-		List<RacerData> racerDataList;
-		try (Stream<String> fileInStream = Files.lines(Paths.get(fileAbbreviations))) {
-			racerDataList = fileInStream
-					        .map(temp ->
-			                     new RacerData(temp))
-					        .collect(Collectors.toList());
-		} catch (IOException e) {
-			racerDataList = new ArrayList<>();
-			e.printStackTrace();
-		}
+		ParsingReader parsingReader = new ParsingReader();
+		List<RacerData> racerDataList = parsingReader.parseFileToListRacerData(fileAbbreviations);
 
-		Map<String, String> mapStart = convertFileToMap(fileStart);
-		Map<String, String> mapEnd = convertFileToMap(fileEnd);
+		Map<String, String> mapStart = parsingReader.parseFileToMap(fileStart);
+		Map<String, String> mapEnd = parsingReader.parseFileToMap(fileEnd);
 
 		Map<String, String> mapTime = Stream.of(mapStart, mapEnd)
 				                      .flatMap(m -> 
@@ -64,34 +46,13 @@ public class RacersList {
 				.filter(s -> 
 				        !mapTime.get(s.getAbbr()).isEmpty())
 				.map(s -> {
-					s.setRacerTime(reseiveTime(mapTime.get(s.getAbbr())));
+					s.setRacerTime(parsingReader.parseStringToDuration(mapTime.get(s.getAbbr())));
 					return s;
 				})
 				.sorted(Comparator.comparing(RacerData::getRacerTime))
 				.collect(Collectors.toList());
 
 		return racerDataListSorted;
-	}
-
-	private Duration reseiveTime(String time) {
-		String timeStart = time.substring(0, 23);
-		String timeEnd = time.substring(23);
-		return Duration.between(convertStringToLocalDT(timeStart), convertStringToLocalDT(timeEnd));
-	}
-
-	private LocalDateTime convertStringToLocalDT(String text) {
-		return LocalDateTime.parse(text.replace('_', ' '), DateTimeFormatter.ofPattern(PATTERN_DATA_TIME));
-	}
-
-	private Map<String, String> convertFileToMap(String file) {
-		Map<String, String> mapAbbreviations = new HashMap<>();
-		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
-			mapAbbreviations = fileInStream
-					.collect(Collectors.toMap(i -> i.substring(0, 3), i -> i.substring(3)));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return mapAbbreviations;
 	}
 
 	private String reseivePath(String file) {
@@ -122,10 +83,7 @@ public class RacersList {
 		if (fileName.isEmpty()) {
 			throw new IllegalArgumentException("Null parameters are not allowed");
 		}
-		File f = new File(reseivePath(fileName));
-		if (f.isFile()) {
-			return true;
-		}
-		return false;
+		File f = new File(reseivePath(fileName));	
+		return f.isFile();	
 	}
 }

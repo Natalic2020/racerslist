@@ -13,8 +13,8 @@ public class Application {
 		try {
 			racersList.formRacersList(fileStart, fileEnd, fileAbbr)
 			          .forEach(x->
-			          {System.out.print(x);
-			          });
+			          System.out.print(x)
+			          );
 		} catch (IllegalArgumentException e) {
 			System.out.println("Invalid  input:\"" + e.getMessage() + "\"");
 		}		
