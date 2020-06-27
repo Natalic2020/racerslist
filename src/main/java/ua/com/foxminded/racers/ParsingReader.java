@@ -1,5 +1,6 @@
 package ua.com.foxminded.racers;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -42,13 +43,30 @@ private static final String PATTERN_DATA_TIME = "yyyy-MM-dd HH:mm:ss.SSS";
 		return mapAbbreviations;
 	}	
 	
-	public Duration parseStringToDuration(String time) {
-		String timeStart = time.substring(0, 23);
-		String timeEnd = time.substring(23);
+	public Duration parseStringToDuration(String timeStart, String timeEnd) {
 		return Duration.between(parseStringToLocalDT(timeStart), parseStringToLocalDT(timeEnd));
 	}
 
 	private LocalDateTime parseStringToLocalDT(String text) {
 		return LocalDateTime.parse(text.replace('_', ' '), DateTimeFormatter.ofPattern(PATTERN_DATA_TIME));
+	}
+	
+	private void checkFile(String fileName) {
+		if (fileName == null) {
+			throw new IllegalArgumentException("Null parameters are not allowed " + fileName);
+		}
+		if (fileName.isEmpty()) {
+			throw new IllegalArgumentException("Null parameters are not allowed "  + fileName);
+		}	
+	}
+	
+	public String reseivePath(String file) {
+	    checkFile(file);
+	    String relativePath = getClass().getClassLoader().getResource(file).getPath().substring(1);
+	    File f = new File(relativePath);
+		if (!f.isFile()) {
+			throw new IllegalArgumentException("Directory is  not allowed  "  + relativePath + " Wait for a file ....");
+		} 
+		return relativePath;
 	}
 }
