@@ -18,12 +18,15 @@ public class ParsingReader {
 	
 private static final String PATTERN_DATA_TIME = "yyyy-MM-dd HH:mm:ss.SSS";
 	
-	public List<RacerData> parseFileToListRacerData(String file) {	
+private static final String TEXT_SEPARATOR = "_";
+
+	public List<RacerData> parseFileToListRacerData(String fileName) {
+		String file = reseivePath(fileName);
 		List<RacerData> racerDataList;
 		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
 			racerDataList = fileInStream
-					        .map(temp ->
-			                     new RacerData(temp))
+					        .map(text ->
+			                     new RacerData(text.substring(0,3), parseName(text), parseCar(text)))
 					        .collect(Collectors.toList());
 		} catch (IOException e) {
 			racerDataList = new ArrayList<>();
@@ -32,19 +35,30 @@ private static final String PATTERN_DATA_TIME = "yyyy-MM-dd HH:mm:ss.SSS";
 		return racerDataList;
 	}
 	
-	public Map<String, String> parseFileToMap(String file) {
-		Map<String, String> mapAbbreviations = new HashMap<>();
+	private String parseName(String text) {
+		int indexSeparator = text.indexOf(TEXT_SEPARATOR, 5);
+		return text.substring(4,indexSeparator);
+	}
+	
+	private String parseCar(String text) {
+		int indexSeparator = text.indexOf(TEXT_SEPARATOR, 5);
+		return text.substring(indexSeparator + 1);
+	}
+	
+	public Map<String, LocalDateTime> parseFileToMap(String fileName) {
+		String file = reseivePath(fileName);
+		Map<String, LocalDateTime> mapAbbreviations = new HashMap<>();
 		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
 			mapAbbreviations = fileInStream
-					.collect(Collectors.toMap(i -> i.substring(0, 3), i -> i.substring(3)));
+					.collect(Collectors.toMap(i -> i.substring(0, 3), i -> parseStringToLocalDT(i.substring(3))));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return mapAbbreviations;
 	}	
 	
-	public Duration parseStringToDuration(String timeStart, String timeEnd) {
-		return Duration.between(parseStringToLocalDT(timeStart), parseStringToLocalDT(timeEnd));
+	public Duration parseStringToDuration(LocalDateTime timeStart, LocalDateTime timeEnd) {
+		return Duration.between(timeStart,timeEnd);
 	}
 
 	private LocalDateTime parseStringToLocalDT(String text) {

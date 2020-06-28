@@ -4,17 +4,15 @@ import java.time.Duration;
 
 public class RacerData {
 
-	private static final String TEXT_SEPARATOR = "_";
 	private String abbr = "";
 	private String name = "";
 	private String car = "";
 	private Duration racerTime;
 	
-	public RacerData(String text) {
-		abbr = text.substring(0,3);
-		int indexSeparator = text.indexOf(TEXT_SEPARATOR, 5);
-		name = text.substring(4,indexSeparator);
-		car = text.substring(indexSeparator + 1);
+	public RacerData(String abbr, String name, String car) {
+		this.abbr = abbr;
+		this.name = name;
+		this.car = car; 
 	}
 	public String getAbbr() {
 		return abbr;

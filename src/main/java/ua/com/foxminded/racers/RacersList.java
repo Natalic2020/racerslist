@@ -1,9 +1,9 @@
 package ua.com.foxminded.racers;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -11,36 +11,22 @@ import java.util.stream.Stream;
 public class RacersList {
 
 	public Stream<String> formRacersList(String fileStart, String fileEnd, String fileAbbreviations) {
-		List<RacerData> racerDataList = formRacerList(fileStart, fileEnd, fileAbbreviations);
-		return formOutputListRacers(racerDataList);
-	}
-
-	private List<RacerData> formRacerList(String fileStartName, String fileEndName, String fileAbbreviationsName) {
-
 		ParsingReader parsingReader = new ParsingReader();
-		String fileStart = parsingReader.reseivePath(fileStartName);
-		String fileEnd = parsingReader.reseivePath(fileEndName);
-		String fileAbbreviations = parsingReader.reseivePath(fileAbbreviationsName);
 
 		List<RacerData> racerDataList = parsingReader.parseFileToListRacerData(fileAbbreviations);
+		Map<String, LocalDateTime> mapStart = parsingReader.parseFileToMap(fileStart);
+		Map<String, LocalDateTime> mapEnd = parsingReader.parseFileToMap(fileEnd);
 
-		Map<String, String> mapStart = parsingReader.parseFileToMap(fileStart);
-		Map<String, String> mapEnd = parsingReader.parseFileToMap(fileEnd);
+		List<RacerData> racerData = fillRacerListwithTime(racerDataList, mapStart, mapEnd);
+		return formOutputListRacers(racerData);
+	}
 
+	private List<RacerData> fillRacerListwithTime(List<RacerData> racerDataList, Map<String, LocalDateTime> mapStart, Map<String, LocalDateTime> mapEnd) {
+
+		ParsingReader parsingReader = new ParsingReader();
 		List<RacerData> racerDataListSorted = racerDataList.stream()
 		.map(s -> {
-			s.setRacerTime(parsingReader.parseStringToDuration(Stream.of(mapStart)
-					                                                     .filter(s1 -> 
-					                                                             !s1.get(s.getAbbr()).isEmpty())
-					                                                     .map(s1 ->
-					                                                            s1.get(s.getAbbr()))
-					                                                     .collect(Collectors.joining())
-					                                           , Stream.of(mapEnd)
-					                                                     .filter(s2 -> 
-					                                                            !s2.get(s.getAbbr()).isEmpty())
-					                                                     .map(s2 -> 
-					                                                     s2.get(s.getAbbr()))
-					                                                     .collect(Collectors.joining())
+			s.setRacerTime(parsingReader.parseStringToDuration(mapStart.get(s.getAbbr()), mapEnd.get(s.getAbbr())
 					                                           ));
 			return s;
 		})

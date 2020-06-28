@@ -2,8 +2,6 @@ package ua.com.foxminded.racers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -66,9 +64,4 @@ class RacersListTest {
 	        		""); //     
 	        assertEquals(expected, actual);
 	    }
-	 
-	 private String reseivePath(String file) {
-			return getClass().getClassLoader().getResource(file).getPath().substring(1);
-		}
-	 
 }
