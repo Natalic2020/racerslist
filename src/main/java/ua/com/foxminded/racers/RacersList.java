@@ -21,35 +21,39 @@ public class RacersList {
 		return formOutputListRacers(racerData);
 	}
 
-	private List<RacerData> fillRacerListwithTime(List<RacerData> racerDataList, Map<String, LocalDateTime> mapStart, Map<String, LocalDateTime> mapEnd) {
+	private List<RacerData> fillRacerListwithTime(List<RacerData> racerDataList, Map<String, LocalDateTime> mapStart,
+	        Map<String, LocalDateTime> mapEnd) {
 
 		ParsingReader parsingReader = new ParsingReader();
 		List<RacerData> racerDataListSorted = racerDataList.stream()
-		.map(s -> {
-			s.setRacerTime(parsingReader.parseStringToDuration(mapStart.get(s.getAbbr()), mapEnd.get(s.getAbbr())
-					                                           ));
-			return s;
-		})
-		.sorted(Comparator.comparing(RacerData::getRacerTime))
-		.collect(Collectors.toList());
-		
+		                                                   .map(s ->
+			                                                   {
+				                                                   s.setRacerTime(parsingReader.parseStringToDuration(
+				                                                           mapStart.get(s.getAbbr()),
+				                                                           mapEnd.get(s.getAbbr())));
+				                                                   return s;
+			                                                   })
+		                                                   .sorted(Comparator.comparing(RacerData::getRacerTime))
+		                                                   .collect(Collectors.toList());
+
 		return racerDataListSorted;
 	}
 
 	private Stream<String> formOutputListRacers(List<RacerData> racerDataList) {
 		Stream<String> first15 = formOutputListRacers(racerDataList, 1, 15);
 		Stream<String> separator = Stream
-				.of(String.format("%s%n", "*----------------------------------------------------------------"));
+		                                 .of(String.format("%s%n",
+		                                         "*----------------------------------------------------------------"));
 		Stream<String> last = formOutputListRacers(racerDataList, 16, racerDataList.size());
 		return Stream.concat(Stream.concat(first15, separator), last);
 	}
 
 	private Stream<String> formOutputListRacers(List<RacerData> racerDataList, int start, int end) {
-		return IntStream
-				.range(start - 1, end)
-				.mapToObj(i -> {
-			RacerData racer = racerDataList.get(i);
-			return String.format("%2d. %s%n", i + 1, racer.toString());
-		});
+		return IntStream.range(start - 1, end)
+		                .mapToObj(i ->
+			                {
+				                RacerData racer = racerDataList.get(i);
+				                return String.format("%2d. %s%n", i + 1, racer.toString());
+			                });
 	}
 }
