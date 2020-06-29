@@ -1,18 +1,22 @@
 package ua.com.foxminded.racers;
 
 import java.time.Duration;
+import java.util.Optional;
 
 public class RacerData {
 
-	private String abbr = "";
-	private String name = "";
-	private String car = "";
+	private String abbr;
+	private String name;
+	private String car;
 	private Duration racerTime;
 
 	public RacerData(String abbr, String name, String car) {
-		this.abbr = abbr;
-		this.name = name;
-		this.car = car;
+		this.abbr = Optional.ofNullable(abbr)
+		        .orElse("");
+		this.name = Optional.ofNullable(name)
+		        .orElse("");
+		this.car = Optional.ofNullable(car)
+		        .orElse("");
 	}
 
 	public String getAbbr() {
@@ -50,8 +54,8 @@ public class RacerData {
 	@Override
 	public String toString() {
 		return String.format("%0$-19s| %0$-30s| %s", name, car, racerTime.toString()
-		                                                                 .replace("PT", "")
-		                                                                 .replace("M", ":")
-		                                                                 .replace("S", ""));
+		        .replace("PT", "")
+		        .replace("M", ":")
+		        .replace("S", ""));
 	}
 }

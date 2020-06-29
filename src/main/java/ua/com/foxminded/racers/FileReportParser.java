@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ParsingReader {
+public class FileReportParser {
 
 	private static final String PATTERN_DATA_TIME = "yyyy-MM-dd HH:mm:ss.SSS";
 
@@ -25,9 +25,8 @@ public class ParsingReader {
 		List<RacerData> racerDataList;
 		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
 			racerDataList = fileInStream
-			                            .map(text -> new RacerData(text.substring(0, 3), parseName(text),
-			                                    parseCar(text)))
-			                            .collect(Collectors.toList());
+			        .map(text -> new RacerData(text.substring(0, 3), parseName(text), parseCar(text)))
+			        .collect(Collectors.toList());
 		} catch (IOException e) {
 			racerDataList = new ArrayList<>();
 			e.printStackTrace();
@@ -50,8 +49,7 @@ public class ParsingReader {
 		Map<String, LocalDateTime> mapAbbreviations = new HashMap<>();
 		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
 			mapAbbreviations = fileInStream
-			                               .collect(Collectors.toMap(i -> i.substring(0, 3),
-			                                       i -> parseStringToLocalDT(i.substring(3))));
+			        .collect(Collectors.toMap(i -> i.substring(0, 3), i -> parseStringToLocalDT(i.substring(3))));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -59,6 +57,9 @@ public class ParsingReader {
 	}
 
 	public Duration parseStringToDuration(LocalDateTime timeStart, LocalDateTime timeEnd) {
+		if (timeStart == null || timeEnd == null) {
+			return Duration.ZERO;
+		}
 		return Duration.between(timeStart, timeEnd);
 	}
 
@@ -75,12 +76,12 @@ public class ParsingReader {
 		}
 	}
 
-	public String reseivePath(String file) {
+	private String reseivePath(String file) {
 		checkFile(file);
 		String relativePath = getClass().getClassLoader()
-		                                .getResource(file)
-		                                .getPath()
-		                                .substring(1);
+		        .getResource(file)
+		        .getPath()
+		        .substring(1);
 		File f = new File(relativePath);
 		if (!f.isFile()) {
 			throw new IllegalArgumentException("Directory is  not allowed  " + relativePath + " Wait for a file ....");
