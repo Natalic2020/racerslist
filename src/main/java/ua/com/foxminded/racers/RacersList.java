@@ -1,5 +1,6 @@
 package ua.com.foxminded.racers;
 
+import java.io.FileNotFoundException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -10,7 +11,7 @@ import java.util.stream.IntStream;
 
 public class RacersList {
 
-	public String qualificationReport(String fileStart, String fileEnd, String fileAbbreviations) {
+	public String qualificationReport(String fileStart, String fileEnd, String fileAbbreviations) throws FileNotFoundException {
 		FileReportParser parsingReader = new FileReportParser();
 
 		List<RacerData> racerDataList = parsingReader.parseFileToListRacerData(fileAbbreviations);

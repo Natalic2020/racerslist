@@ -17,6 +17,7 @@ public class RacerData {
 		        .orElse("");
 		this.car = Optional.ofNullable(car)
 		        .orElse("");
+		this.racerTime = Duration.ZERO;
 	}
 
 	public String getAbbr() {

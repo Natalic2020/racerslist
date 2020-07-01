@@ -1,12 +1,14 @@
 package ua.com.foxminded.racers;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +22,12 @@ public class FileReportParser {
 
 	private static final String TEXT_SEPARATOR = "_";
 
-	public List<RacerData> parseFileToListRacerData(String fileName) {
+	public List<RacerData> parseFileToListRacerData(String fileName) throws FileNotFoundException {
 		String file = reseivePath(fileName);
 		List<RacerData> racerDataList;
 		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
 			racerDataList = fileInStream
-			        .map(text -> new RacerData(text.substring(0, 3), parseName(text), parseCar(text)))
+			        .map(this::parseRacer)
 			        .collect(Collectors.toList());
 		} catch (IOException e) {
 			racerDataList = new ArrayList<>();
@@ -34,17 +36,27 @@ public class FileReportParser {
 		return racerDataList;
 	}
 
+	public RacerData parseRacer (String text) {
+		return new RacerData(text.substring(0, 3), parseName(text), parseCar(text));
+	}
+	
 	private String parseName(String text) {
 		int indexSeparator = text.indexOf(TEXT_SEPARATOR, 5);
+		if (indexSeparator==-1) {
+			return null;
+		}
 		return text.substring(4, indexSeparator);
 	}
 
 	private String parseCar(String text) {
 		int indexSeparator = text.indexOf(TEXT_SEPARATOR, 5);
+		if (indexSeparator==-1) {
+			return null;
+		}
 		return text.substring(indexSeparator + 1);
 	}
 
-	public Map<String, LocalDateTime> parseFileToMap(String fileName) {
+	public Map<String, LocalDateTime> parseFileToMap(String fileName) throws FileNotFoundException {
 		String file = reseivePath(fileName);
 		Map<String, LocalDateTime> mapAbbreviations = new HashMap<>();
 		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
@@ -64,7 +76,14 @@ public class FileReportParser {
 	}
 
 	private LocalDateTime parseStringToLocalDT(String text) {
-		return LocalDateTime.parse(text.replace('_', ' '), DateTimeFormatter.ofPattern(PATTERN_DATA_TIME));
+		LocalDateTime dateTime = null ;
+		
+		try {
+			dateTime = LocalDateTime.parse(text.replace('_', ' '), DateTimeFormatter.ofPattern(PATTERN_DATA_TIME));
+		}catch (DateTimeParseException e){
+			e.printStackTrace();	
+		}
+		return dateTime;
 	}
 
 	private void checkFile(String fileName) {
@@ -76,16 +95,19 @@ public class FileReportParser {
 		}
 	}
 
-	private String reseivePath(String file) {
-		checkFile(file);
-		String relativePath = getClass().getClassLoader()
-		        .getResource(file)
-		        .getPath()
-		        .substring(1);
-		File f = new File(relativePath);
-		if (!f.isFile()) {
-			throw new IllegalArgumentException("Directory is  not allowed  " + relativePath + " Wait for a file ....");
+	private String reseivePath(String fileName) throws FileNotFoundException {
+		checkFile(fileName);	
+		ClassLoader classLoader = getClass().getClassLoader();
+		if (classLoader.getResource(fileName) == null) {
+			throw new FileNotFoundException("File was not present: " + fileName);
 		}
-		return relativePath;
+		File file = new File(classLoader.getResource(fileName).getFile());
+	
+		if (!file.isFile()) {
+			throw new IllegalArgumentException("Directory is  not allowed  " + file.getAbsolutePath() + " Wait for a file ....");
+		}
+		String absolutePath = file.getAbsolutePath();
+		
+		return absolutePath;
 	}
 }

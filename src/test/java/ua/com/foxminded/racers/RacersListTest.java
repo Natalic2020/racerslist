@@ -2,6 +2,7 @@ package ua.com.foxminded.racers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.FileNotFoundException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ class RacersListTest {
 				racersList.qualificationReport(absolutePathStart, absolutePathEnd, absolutePathAbbr);
 			});
 	}
-
+	
 	@Test
 	public void fillRacerListwithTime_shouldSortRacers_whenInputUnsortRacers() {
 		List<RacerData> racerDataList = new ArrayList<RacerData>();
@@ -202,7 +203,7 @@ class RacersListTest {
 	}
 	
 	@Test
-	public void qualificationReport_shouldSortedRacers_whenInputStartEndAbbrFiles() {
+	public void qualificationReport_shouldSortedRacers_whenInputStartEndAbbrFiles() throws FileNotFoundException {
 
 		String absolutePathStart = "start.log";
 		String absolutePathEnd = "end.log";

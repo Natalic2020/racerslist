@@ -1,8 +1,10 @@
 package ua.com.foxminded.racers;
 
+import java.io.FileNotFoundException;
+
 public class Application {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 
 		String fileStart = "start.log";
 		String fileEnd = "end.log";
