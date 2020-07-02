@@ -15,7 +15,7 @@ class FileReportParserTest {
 	FileReportParser fileReportParser	= new FileReportParser();
 	
 	@Test
-	public void parseFileToListRacerData_shouldNameAndCar_whenInputRightFile() throws FileNotFoundException {
+	public void parseFileToListRacerData_shouldReadNameAndCar_whenInputRightFile() throws FileNotFoundException {
 		final String fileName = "abbr_test.txt";
 		
 		List<RacerData> actual =  fileReportParser.parseFileToListRacerData(fileName);
@@ -24,7 +24,7 @@ class FileReportParserTest {
 	}
 	
 	@Test
-	public void parseFileToListRacerData_shouldEmpty_whenInputEmptyFile() throws FileNotFoundException {
+	public void parseFileToListRacerData_shouldReturnEmptyArray_whenInputEmptyFile() throws FileNotFoundException {
 		
 		String fileName = "empty.txt";	
 		
@@ -52,7 +52,7 @@ class FileReportParserTest {
 	}
 	
 	@Test
-	public void parseRacer_shouldEmptyNameAndCar_whenInputTextWithoutOneSeparator() {
+	public void parseRacer_shouldReturnEmptyNameAndCar_whenInputTextWithoutOneSeparator() {
 		String text = "LHM_Lewis Hamilton";
 		RacerData actual = fileReportParser.parseRacer(text);
 		String expected = "                   |                               | 0";
@@ -69,7 +69,7 @@ class FileReportParserTest {
 	}
 	
 	@Test
-	public void parseFileToMap_shouldThrowException_whenInputFileWithBrockenDataTime() throws FileNotFoundException {
+	public void parseFileToMap_shouldThrowException_whenInputFileWithBrokenDataTime() throws FileNotFoundException {
 		final String fileName = "time_brocken.txt";
 		
 		assertThrows(DateTimeParseException.class, () ->
