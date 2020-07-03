@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,7 +37,9 @@ public class FileReportParser {
 	}
 
 	public RacerData parseRacer (String text) {
-		return new RacerData(text.substring(0, 3), parseName(text), parseCar(text));
+		return new RacerData(text.substring(0, 3), Optional.ofNullable(parseName(text))
+		        .orElse(""), Optional.ofNullable(parseCar(text))
+		        .orElse(""));
 	}
 	
 	private String parseName(String text) {
@@ -80,9 +83,8 @@ public class FileReportParser {
 	}
 
 	public void checkFile(String fileName) {
-		if (fileName == null) {
-			throw new IllegalArgumentException("Null parameters are not allowed " + fileName);
-		}
+		Optional.ofNullable(fileName).orElseThrow(IllegalArgumentException::new);
+		
 		if (fileName.isEmpty()) {
 			throw new IllegalArgumentException("Null parameters are not allowed " + fileName);
 		}
@@ -91,9 +93,8 @@ public class FileReportParser {
 	private String reseivePath(String fileName) throws FileNotFoundException {
 		checkFile(fileName);	
 		ClassLoader classLoader = getClass().getClassLoader();
-		if (classLoader.getResource(fileName) == null) {
-			throw new FileNotFoundException("File was not present: " + fileName);
-		}
+		Optional.ofNullable(classLoader.getResource(fileName)).orElseThrow(FileNotFoundException::new);
+
 		File file = new File(classLoader.getResource(fileName).getFile());
 	
 		if (!file.isFile()) {
