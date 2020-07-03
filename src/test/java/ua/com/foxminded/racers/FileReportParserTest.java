@@ -15,6 +15,24 @@ class FileReportParserTest {
 	FileReportParser fileReportParser	= new FileReportParser();
 	
 	@Test
+	public void formRacersList_shouldThrowIllegalArgumentException_whenInputNull() {
+		final String absolutePathStart = null;
+		assertThrows(IllegalArgumentException.class, () ->
+			{
+				fileReportParser.checkFile(absolutePathStart);
+			});
+	}
+
+	@Test
+	public void formRacersList_shouldThrowIllegalArgumentException_whenInputEmptyString() {
+		final String absolutePathStart = "";
+		assertThrows(IllegalArgumentException.class, () ->
+			{
+				fileReportParser.checkFile(absolutePathStart);
+			});
+	}
+	
+	@Test
 	public void parseFileToListRacerData_shouldReadNameAndCar_whenInputRightFile() throws FileNotFoundException {
 		final String fileName = "abbr_test.txt";
 		

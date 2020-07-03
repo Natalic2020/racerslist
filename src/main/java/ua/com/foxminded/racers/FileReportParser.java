@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,17 +75,11 @@ public class FileReportParser {
 	}
 
 	private LocalDateTime parseStringToLocalDT(String text) {
-		LocalDateTime dateTime = null ;
-		
-		try {
-			dateTime = LocalDateTime.parse(text.replace('_', ' '), DateTimeFormatter.ofPattern(PATTERN_DATA_TIME));
-		}catch (DateTimeParseException e){
-			e.printStackTrace();	
-		}
+		LocalDateTime	dateTime = LocalDateTime.parse(text.replace('_', ' '), DateTimeFormatter.ofPattern(PATTERN_DATA_TIME));
 		return dateTime;
 	}
 
-	private void checkFile(String fileName) {
+	public void checkFile(String fileName) {
 		if (fileName == null) {
 			throw new IllegalArgumentException("Null parameters are not allowed " + fileName);
 		}
@@ -106,8 +99,6 @@ public class FileReportParser {
 		if (!file.isFile()) {
 			throw new IllegalArgumentException("Directory is  not allowed  " + file.getAbsolutePath() + " Wait for a file ....");
 		}
-		String absolutePath = file.getAbsolutePath();
-		
-		return absolutePath;
+		return file.getAbsolutePath();
 	}
 }
