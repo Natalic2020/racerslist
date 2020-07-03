@@ -83,10 +83,10 @@ public class FileReportParser {
 	}
 
 	public void checkFile(String fileName) {
-		Optional.ofNullable(fileName).orElseThrow(IllegalArgumentException::new);
+		Optional.ofNullable(fileName).orElseThrow(()-> new IllegalArgumentException("Null parameters are not allowed "));
 		
 		if (fileName.isEmpty()) {
-			throw new IllegalArgumentException("Null parameters are not allowed " + fileName);
+			throw new IllegalArgumentException("Empty parameters are not allowed " + fileName);
 		}
 	}
 
