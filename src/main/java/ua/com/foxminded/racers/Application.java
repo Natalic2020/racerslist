@@ -6,14 +6,14 @@ public class Application {
 
 	public static void main(String[] args)  {
 
-		String fileStart = "start.log";
+		String fileStart = " ";
 		String fileEnd = "end.log";
 		String fileAbbr = "abbreviations.txt";
 
-		RacersList racersList = new RacersList();
+		QualificationReport raceReport = new QualificationReport();
 
 		try {
-			System.out.print(racersList.qualificationReport(fileStart, fileEnd, fileAbbr));
+			System.out.print(raceReport.buildRaceReport(fileStart, fileEnd, fileAbbr));
 
 		} catch (IllegalArgumentException e) {
 			System.out.println("Invalid  input:\"" + e.getMessage() + "\"");

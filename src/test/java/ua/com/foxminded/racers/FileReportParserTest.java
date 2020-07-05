@@ -19,7 +19,7 @@ class FileReportParserTest {
 		final String absolutePathStart = null;
 		assertThrows(IllegalArgumentException.class, () ->
 			{
-				fileReportParser.checkFile(absolutePathStart);
+				fileReportParser.checkFileName(absolutePathStart);
 			});
 	}
 
@@ -28,7 +28,7 @@ class FileReportParserTest {
 		final String absolutePathStart = "";
 		assertThrows(IllegalArgumentException.class, () ->
 			{
-				fileReportParser.checkFile(absolutePathStart);
+				fileReportParser.checkFileName(absolutePathStart);
 			});
 	}
 	
@@ -36,7 +36,7 @@ class FileReportParserTest {
 	public void parseFileToListRacerData_shouldReadNameAndCar_whenInputRightFile() throws FileNotFoundException {
 		final String fileName = "abbr_test.txt";
 		
-		List<RacerData> actual =  fileReportParser.parseFileToListRacerData(fileName);
+		List<RacerData> actual =  fileReportParser.parseRacerData(fileName);
 		String expected = "[Lewis Hamilton     | MERCEDES                      | 0]";
 		assertEquals(expected, actual.toString());
 	}
@@ -46,7 +46,7 @@ class FileReportParserTest {
 		
 		String fileName = "empty.txt";	
 		
-		List<RacerData> actual =  fileReportParser.parseFileToListRacerData(fileName);
+		List<RacerData> actual =  fileReportParser.parseRacerData(fileName);
 		String expected = "[]";
 		assertEquals(expected, actual.toString());
 	}
@@ -55,13 +55,13 @@ class FileReportParserTest {
 	public void parseFileToListRacerData_shouldThrowFileNotFoundException_whenInputnotExistFile() {
 		final String fileName = "not_file.txt";
 		
-		assertThrows(FileNotFoundException.class, () ->
+		assertThrows(IllegalArgumentException.class, () ->
 		{
-			fileReportParser.parseFileToListRacerData(fileName);
+			fileReportParser.parseRacerData(fileName);
 		});
 	}
 	
-	@Test
+	@Test //todo expected should be an instance of RacerData
 	public void parseRacer_shouldNameAndCar_whenInputRightText() {
 		String text = "LHM_Lewis Hamilton_MERCEDES";
 		RacerData actual = fileReportParser.parseRacer(text);
@@ -69,7 +69,7 @@ class FileReportParserTest {
 		assertEquals(expected, actual.toString());
 	}
 	
-	@Test
+	@Test//todo expected should be an instance of RacerData
 	public void parseRacer_shouldReturnEmptyNameAndCar_whenInputTextWithoutOneSeparator() {
 		String text = "LHM_Lewis Hamilton";
 		RacerData actual = fileReportParser.parseRacer(text);
@@ -77,7 +77,7 @@ class FileReportParserTest {
 		assertEquals(expected, actual.toString());
 	}
 	
-	@Test
+	@Test//todo expected should be an instance of Map, remove exception
 	public void parseFileToMap_shouldLocalDateTime_whenInputFileWithRightFormatedDataTime() throws FileNotFoundException {
 		final String fileName = "time_test.txt";
 		
@@ -86,7 +86,7 @@ class FileReportParserTest {
 		assertEquals(expected, actual.toString());
 	}
 	
-	@Test
+	@Test//todo  remove exception
 	public void parseFileToMap_shouldThrowException_whenInputFileWithBrokenDataTime() throws FileNotFoundException {
 		final String fileName = "time_brocken.txt";
 		

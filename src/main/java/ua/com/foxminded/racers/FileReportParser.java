@@ -1,18 +1,14 @@
 package ua.com.foxminded.racers;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,10 +16,13 @@ public class FileReportParser {
 
 	private static final String PATTERN_DATA_TIME = "yyyy-MM-dd HH:mm:ss.SSS";
 
-	private static final String TEXT_SEPARATOR = "_";
+	private static final char TEXT_SEPARATOR = '_';
+	private static final String PARSING_EMPTY_RESULT = "";
+	public static final int NOT_FOUND_INDEX = -1;
+	public static final char EMPTY_CHAR = ' ';
 
-	public List<RacerData> parseFileToListRacerData(String fileName) throws FileNotFoundException {
-		String file = reseivePath(fileName);
+	public List<RacerData> parseRacerData(String fileName) {
+		String file = receivePath(fileName);
 		List<RacerData> racerDataList;
 		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
 			racerDataList = fileInStream
@@ -37,39 +36,40 @@ public class FileReportParser {
 	}
 
 	public RacerData parseRacer (String text) {
-		return new RacerData(text.substring(0, 3), Optional.ofNullable(parseName(text))
-		        .orElse(""), Optional.ofNullable(parseCar(text))
-		        .orElse(""));
-	}
-	
-	private String parseName(String text) {
-		int indexSeparator = text.indexOf(TEXT_SEPARATOR, 5);
-		if (indexSeparator==-1) {
-			return null;
-		}
-		return text.substring(4, indexSeparator);
+		return new RacerData(parseAbbreviation(text), parseName(text), parseCar(text));
 	}
 
-	private String parseCar(String text) {
-		int indexSeparator = text.indexOf(TEXT_SEPARATOR, 5);
-		if (indexSeparator==-1) {
-			return null;
-		}
-		return text.substring(indexSeparator + 1);
+	private String parseAbbreviation(String text) {
+		return text.substring(0, 3);
 	}
 
-	public Map<String, LocalDateTime> parseFileToMap(String fileName) throws FileNotFoundException {
-		String file = reseivePath(fileName);
+	private String parseName(String line) {
+		int indexSeparator = findIndexOfElementInLine(line);
+		return indexSeparator == NOT_FOUND_INDEX ? PARSING_EMPTY_RESULT : line.substring(4, indexSeparator);
+	}
+
+	private String parseCar(String line) {
+		int indexSeparator = findIndexOfElementInLine(line);
+		return indexSeparator == -1 ? PARSING_EMPTY_RESULT : line.substring(indexSeparator + 1);
+	}
+
+	private int findIndexOfElementInLine(String line) {
+		return line.indexOf(TEXT_SEPARATOR, 5);
+
+	}
+//todo extract nambers to costants with names like "CAR_NAME_START_INDEX"
+	public Map<String, LocalDateTime> parseFileToMap(String fileName) {
+		String file = receivePath(fileName);
 		Map<String, LocalDateTime> mapAbbreviations = new HashMap<>();
 		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
 			mapAbbreviations = fileInStream
-			        .collect(Collectors.toMap(i -> i.substring(0, 3), i -> parseStringToLocalDT(i.substring(3))));
+			        .collect(Collectors.toMap(i -> parseAbbreviation(i), i -> parseStringToLocalDT(i.substring(3))));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return mapAbbreviations;
 	}
-
+//todo there is no string
 	public Duration parseStringToDuration(LocalDateTime timeStart, LocalDateTime timeEnd) {
 		if (timeStart == null || timeEnd == null) {
 			return Duration.ZERO;
@@ -78,28 +78,49 @@ public class FileReportParser {
 	}
 
 	private LocalDateTime parseStringToLocalDT(String text) {
-		LocalDateTime	dateTime = LocalDateTime.parse(text.replace('_', ' '), DateTimeFormatter.ofPattern(PATTERN_DATA_TIME));
+		LocalDateTime	dateTime = LocalDateTime.parse(text.replace(TEXT_SEPARATOR, EMPTY_CHAR),
+				DateTimeFormatter.ofPattern(PATTERN_DATA_TIME));
 		return dateTime;
 	}
 
-	public void checkFile(String fileName) {
-		Optional.ofNullable(fileName).orElseThrow(()-> new IllegalArgumentException("Null parameters are not allowed "));
+	public void checkFileName(String fileName) {
+		Optional.ofNullable(fileName).orElseThrow(()-> new IllegalArgumentException("Null as file name is not allowed "));
 		
 		if (fileName.isEmpty()) {
 			throw new IllegalArgumentException("Empty parameters are not allowed " + fileName);
 		}
 	}
 
-	private String reseivePath(String fileName) throws FileNotFoundException {
-		checkFile(fileName);	
-		ClassLoader classLoader = getClass().getClassLoader();
-		Optional.ofNullable(classLoader.getResource(fileName)).orElseThrow(FileNotFoundException::new);
+	private String receivePath(String fileName) {
+		checkFileName(fileName);
 
-		File file = new File(classLoader.getResource(fileName).getFile());
-	
-		if (!file.isFile()) {
-			throw new IllegalArgumentException("Directory is  not allowed  " + file.getAbsolutePath() + " Wait for a file ....");
-		}
+		ClassLoader classLoader = getClass().getClassLoader();
+
+		File file = Optional
+				.ofNullable(classLoader.getResource(fileName))
+				.map(URL::getFile)
+				.map(File::new)
+				.orElseThrow(() -> new IllegalArgumentException("File doesn't exis"));
+
+		checkFile(file);
+
 		return file.getAbsolutePath();
+	}
+
+	private void checkFile(File file) {
+		if (isNotExist(file)) {
+			throw new IllegalArgumentException("File " + file + " doesn't exist");
+		}
+		if (isNotFile(file)) {
+			throw new IllegalArgumentException("Directory is  not allowed  " + file + " Wait for a file ....");
+		}
+	}
+
+	private boolean isNotFile(File file) {
+		return !file.isFile();
+	}
+
+	private boolean isNotExist(File file) {
+		return !file.exists();
 	}
 }

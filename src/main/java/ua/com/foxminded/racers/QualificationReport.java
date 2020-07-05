@@ -1,7 +1,6 @@
 package ua.com.foxminded.racers;
 
 import java.io.FileNotFoundException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -9,33 +8,37 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class RacersList {
+public class QualificationReport {
 
-	public String qualificationReport(String fileStart, String fileEnd, String fileAbbreviations) throws FileNotFoundException {
+	public String buildRaceReport(String fileStart, String fileEnd, String fileAbbreviations) throws FileNotFoundException {
 		FileReportParser parsingReader = new FileReportParser();
 
-		List<RacerData> racerDataList = parsingReader.parseFileToListRacerData(fileAbbreviations);
+		List<RacerData> racerDataList = parsingReader.parseRacerData(fileAbbreviations);
 		Map<String, LocalDateTime> mapStart = parsingReader.parseFileToMap(fileStart);
 		Map<String, LocalDateTime> mapEnd = parsingReader.parseFileToMap(fileEnd);
 
-		List<RacerData> racerData = fillRacerListwithTime(racerDataList, mapStart, mapEnd);
+		List<RacerData> racerData = fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		return formOutputListRacers(racerData);
 	}
 
-	protected List<RacerData> fillRacerListwithTime(List<RacerData> racerDataList, Map<String, LocalDateTime> mapStart,
-	        Map<String, LocalDateTime> mapEnd) {
+	protected List<RacerData> fillRacerListWithTime(List<RacerData> racerDataList, Map<String, LocalDateTime> mapStart,
+													Map<String, LocalDateTime> mapEnd) {
 
-		FileReportParser parsingReader = new FileReportParser();
-		List<RacerData> racerDataListSorted = racerDataList.stream()
-		        .map(s ->
-			        {
-				        s.setRacerTime(parsingReader.parseStringToDuration(mapStart.get(s.getAbbr()),
-				                mapEnd.get(s.getAbbr())));
-				        return s;
-			        })
-		        .filter(s -> s.getRacerTime() != Duration.ZERO)
-		        .sorted(Comparator.comparing(RacerData::getRacerTime))
-		        .collect(Collectors.toList());
+		FileReportParser reportParser = new FileReportParser();
+		List<RacerData> racerDataListSorted = racerDataList
+				.stream()
+				.map(s ->
+				{
+					s.setBestTime(reportParser.parseStringToDuration(mapStart.get(s.getAbbr()),
+							mapEnd.get(s.getAbbr())));
+					return s;
+				})
+				.filter(racer -> !racer.getAbbr().isEmpty())
+				.filter(racer -> !racer.getName().isEmpty())
+				.filter(racer -> !racer.getCar().isEmpty())
+				.filter(racer -> !racer.getBestTime().isZero())
+				.sorted(Comparator.comparing(RacerData::getBestTime))
+				.collect(Collectors.toList());
 
 		return racerDataListSorted;
 	}

@@ -11,12 +11,12 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-class RacersListTest {
+class QualificationReportTest {
 
-	RacersList racersList = new RacersList();
+	QualificationReport racersList = new QualificationReport();
 	
 	@Test
-	public void fillRacerListwithTime_shouldSortRacers_whenInputUnsortRacers() {
+	public void fillRacerListWithTime_shouldSortRacers_whenInputUnsortRacers() {
 		List<RacerData> racerDataList = new ArrayList<RacerData>();
 		racerDataList.add(new RacerData("DMR", "Daniel", "MERCEDES"));
 		racerDataList.add(new RacerData("LFR", "Lewis", "FERRARI"));
@@ -29,14 +29,21 @@ class RacersListTest {
 		mapEnd.put("LFR", LocalDateTime.of(2018, 05, 24, 12, 4, 1, 100000000));
 		mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
-		
-		List<RacerData> actual = racersList.fillRacerListwithTime(racerDataList, mapStart, mapEnd); 
-		String expected = "[Lewis              | FERRARI                       | 4:1.1, Sergey             | RENAULT                       | 10:0.258, Daniel             | MERCEDES                      | 15:2.252]";
+
+		String expected = "[Lewis              | FERRARI                       | 4:1.1," +
+			            	" Sergey             | RENAULT                       | 10:0.258," +
+			            	" Daniel             | MERCEDES                      | 15:2.252]";
+
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
+
 		assertEquals(expected, actual.toString());
 	}
 	
+	@Test //todo finish test
+	public void fillRacerListWithTime_shouldExcludeInvalidRecord_whenInputEndTimeNull() {}
+
 	@Test
-	public void fillRacerListwithTime_shouldExcludeInvalidRecord_whenInputStartTimeNull() {
+	public void fillRacerListWithTime_shouldExcludeInvalidRecord_whenInputStartTimeNull() {
 		List<RacerData> racerDataList = new ArrayList<RacerData>();
 		racerDataList.add(new RacerData("DMR", "Daniel", "MERCEDES"));
 		racerDataList.add(new RacerData("LFR", "Lewis", "FERRARI"));
@@ -50,13 +57,13 @@ class RacersListTest {
 		mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
 		
-		List<RacerData> actual = racersList.fillRacerListwithTime(racerDataList, mapStart, mapEnd); 
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		String expected = "[Sergey             | RENAULT                       | 10:0.258, Daniel             | MERCEDES                      | 15:2.252]";
 		assertEquals(expected, actual.toString());
 	}
 	
 	@Test
-	public void fillRacerListwithTime_shouldSortRacersOneNameEmpty_whenInputNameNull() {
+	public void fillRacerListwithTime_shouldExcludeInvalidRecord_whenInputNameNull() {
 		List<RacerData> racerDataList = new ArrayList<RacerData>();
 		racerDataList.add(new RacerData("DMR", null, "MERCEDES"));
 		racerDataList.add(new RacerData("LFR", "Lewis", "FERRARI"));
@@ -70,13 +77,17 @@ class RacersListTest {
 		mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
 		
-		List<RacerData> actual = racersList.fillRacerListwithTime(racerDataList, mapStart, mapEnd); 
-		String expected = "[Lewis              | FERRARI                       | 4:1.1, Sergey             | RENAULT                       | 10:0.258,                    | MERCEDES                      | 15:2.252]";
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
+		String expected = "[Lewis              | FERRARI                       | 4:1.1," +
+				" Sergey             | RENAULT                       | 10:0.258]";
 		assertEquals(expected, actual.toString());
 	}
 	
 	@Test
-	public void fillRacerListwithTime_shouldSortRacersOneLess_whenInputAbbrNull() {
+	public void fillRacerListwithTime_shouldExcludeInvalidRecord_whenInputCarNull() {}
+
+	@Test
+	public void fillRacerListwithTime_shouldExcludeInvalidRecord_whenInputAbbrNull() {
 		List<RacerData> racerDataList = new ArrayList<RacerData>();
 		racerDataList.add(new RacerData(null, "Daniel", "MERCEDES"));
 		racerDataList.add(new RacerData("LFR", "Lewis", "FERRARI"));
@@ -90,12 +101,15 @@ class RacersListTest {
 		mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
 		
-		List<RacerData> actual = racersList.fillRacerListwithTime(racerDataList, mapStart, mapEnd); 
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		String expected = "[Lewis              | FERRARI                       | 4:1.1, Sergey             | RENAULT                       | 10:0.258]";
 		assertEquals(expected, actual.toString());
 	}
 	
-	@Test
+	@Test //todo accomplish
+	public void fillRacerListwithTime_shouldEmptyList_whenInputEmptyMapEnd() {}
+
+	@Test //todo rename shouldReturn
 	public void fillRacerListwithTime_shouldEmptyList_whenInputEmptyMapStart() {
 		List<RacerData> racerDataList = new ArrayList<RacerData>();
 		racerDataList.add(new RacerData("DMR", "Daniel", "MERCEDES"));
@@ -107,12 +121,12 @@ class RacersListTest {
 		mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
 		
-		List<RacerData> actual = racersList.fillRacerListwithTime(racerDataList, mapStart, mapEnd); 
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		String expected = "[]";
 		assertEquals(expected, actual.toString());
 	}
 	
-	@Test
+	@Test// todo rename should exclude
 	public void fillRacerListwithTime_shouldSortRacersOneLess_whenInputWrongAbbrByStart() {
 		List<RacerData> racerDataList = new ArrayList<RacerData>();
 		racerDataList.add(new RacerData("DMR", "Daniel", "MERCEDES"));
@@ -127,12 +141,12 @@ class RacersListTest {
 		mapEnd.put("DMK", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
 		
-		List<RacerData> actual = racersList.fillRacerListwithTime(racerDataList, mapStart, mapEnd); 
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		String expected = "[Lewis              | FERRARI                       | 4:1.1, Sergey             | RENAULT                       | 10:0.258]";
 		assertEquals(expected, actual.toString());
 	}
 	
-	@Test
+	@Test// todo rename  - should return
 	public void fillRacerListwithTime_shouldEmptyList_whenInputEmptyRacerDataList() {
 		List<RacerData> racerDataList = new ArrayList<RacerData>();
 		Map<String, LocalDateTime> mapStart = new HashMap<>();
@@ -144,20 +158,22 @@ class RacersListTest {
 		mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
 		
-		List<RacerData> actual = racersList.fillRacerListwithTime(racerDataList, mapStart, mapEnd); 
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		String expected = "[]";
 		assertEquals(expected, actual.toString());
 	}
 
-	@Test
-	public void fillRacerListwithTime_shouldAtTheEndSelector_whenInput15Racers() {
+	@Test // todo it is test for formOutputListRacers(), rename
+	public void fillRacerListwithTime_shouldEndWithSeparator_whenInput15Racers() {
 		List<RacerData> racerDataList = new ArrayList<>();
 		RacerData racerData = new RacerData("DMR", "Daniel", "MERCEDES");
-		racerData.setRacerTime(Duration.ofDays(1));
+		racerData.setBestTime(Duration.ofDays(1));
 		for (int i = 0; i < 15; i++) {
 			racerDataList.add(racerData);
 		}
 		String actual = racersList.formOutputListRacers(racerDataList); 	
 		assertTrue(actual.endsWith(String.format("%s%n", "*----------------------------------------------------------------")));
 	}
+
+	// todo add test for output of report (2-3 values,  formOutputListRacers())
 }
