@@ -25,7 +25,9 @@ public class FileReportParser {
 	public static final int NAME_START_INDEX = 4;
 
 	public List<RacerData> parseRacerData(String fileName) {
-		String file = receivePath(fileName);
+		List<String> rawRacersData = readFileToLines(fileName);
+		List<RacerData> racersData = parseRacerData(rawRacersData);
+		/*String file = receivePath(fileName);
 		List<RacerData> racerDataList;
 		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
 			racerDataList = fileInStream
@@ -34,8 +36,16 @@ public class FileReportParser {
 		} catch (IOException e) {
 			racerDataList = new ArrayList<>();
 			e.printStackTrace();
-		}
-		return racerDataList;
+		}*/
+		return racersData;
+	}
+
+	private List<RacerData> parseRacerData(List<String> rawData) {
+		return null;
+	}
+
+	private List<String> readFileToLines(String fileName) {
+		return null;
 	}
 
 	public RacerData parseRacer (String text) {
