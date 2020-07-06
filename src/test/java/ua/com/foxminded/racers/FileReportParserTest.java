@@ -35,17 +35,14 @@ class FileReportParserTest {
 	@Test
 	public void parseFileToListRacerData_shouldReadNameAndCar_whenInputRightFile() throws FileNotFoundException {
 		final String fileName = "abbr_test.txt";
-		
 		List<RacerData> actual =  fileReportParser.parseRacerData(fileName);
 		String expected = "[Lewis Hamilton     | MERCEDES                      | 0]";
 		assertEquals(expected, actual.toString());
 	}
 	
 	@Test
-	public void parseFileToListRacerData_shouldReturnEmptyArray_whenInputEmptyFile() throws FileNotFoundException {
-		
+	public void parseFileToListRacerData_shouldReturnEmptyArray_whenInputEmptyFile() {
 		String fileName = "empty.txt";	
-		
 		List<RacerData> actual =  fileReportParser.parseRacerData(fileName);
 		String expected = "[]";
 		assertEquals(expected, actual.toString());
@@ -61,33 +58,28 @@ class FileReportParserTest {
 		});
 	}
 	
-	@Test //todo expected should be an instance of RacerData
-	public void parseRacer_shouldNameAndCar_whenInputRightText() {
+	@Test 
+	public void parseRacer_shouldReturnInstanceOfRacerData_whenInputRightText() {
 		String text = "LHM_Lewis Hamilton_MERCEDES";
 		RacerData actual = fileReportParser.parseRacer(text);
-		String expected = "Lewis Hamilton     | MERCEDES                      | 0";
-		assertEquals(expected, actual.toString());
+		assertEquals("ua.com.foxminded.racers.RacerData", actual.getClass().getName());
 	}
 	
-	@Test//todo expected should be an instance of RacerData
-	public void parseRacer_shouldReturnEmptyNameAndCar_whenInputTextWithoutOneSeparator() {
+	@Test
+	public void parseRacer_shouldReturnInstanceOfRacerData_whenInputTextWithoutOneSeparator() {
 		String text = "LHM_Lewis Hamilton";
 		RacerData actual = fileReportParser.parseRacer(text);
-		String expected = "                   |                               | 0";
-		assertEquals(expected, actual.toString());
+		assertEquals("ua.com.foxminded.racers.RacerData", actual.getClass().getName());
 	}
 	
-	@Test//todo expected should be an instance of Map, remove exception
-	public void parseFileToMap_shouldLocalDateTime_whenInputFileWithRightFormatedDataTime() throws FileNotFoundException {
+	@Test
+	public void parseFileToMap_shouldReturnHashMap_whenInputFileWithRightFormatedDataTime() {
 		final String fileName = "time_test.txt";
-		
 		Map<String, LocalDateTime> actual =  fileReportParser.parseFileToMap(fileName);
-		String expected = "{SVF=2018-05-24T12:02:58.917}";
-		assertEquals(expected, actual.toString());
+		assertEquals("java.util.HashMap", actual.getClass().getName());
 	}
 	
-	@Test//todo  remove exception
-	public void parseFileToMap_shouldThrowException_whenInputFileWithBrokenDataTime() throws FileNotFoundException {
+	public void parseFileToMap_shouldThrowException_whenInputFileWithBrokenDataTime() {
 		final String fileName = "time_brocken.txt";
 		
 		assertThrows(DateTimeParseException.class, () ->

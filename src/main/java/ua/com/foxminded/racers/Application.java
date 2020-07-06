@@ -6,7 +6,7 @@ public class Application {
 
 	public static void main(String[] args)  {
 
-		String fileStart = " ";
+		String fileStart = "start.log";
 		String fileEnd = "end.log";
 		String fileAbbr = "abbreviations.txt";
 

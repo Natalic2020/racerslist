@@ -20,6 +20,9 @@ public class FileReportParser {
 	private static final String PARSING_EMPTY_RESULT = "";
 	public static final int NOT_FOUND_INDEX = -1;
 	public static final char EMPTY_CHAR = ' ';
+	public static final int LENGTH_ABBR = 3;
+	public static final int ABBR_START_INDEX = 0;
+	public static final int NAME_START_INDEX = 4;
 
 	public List<RacerData> parseRacerData(String fileName) {
 		String file = receivePath(fileName);
@@ -40,38 +43,42 @@ public class FileReportParser {
 	}
 
 	private String parseAbbreviation(String text) {
-		return text.substring(0, 3);
+		return text.substring(ABBR_START_INDEX, LENGTH_ABBR);
 	}
 
+	private String parseTime(String text) {
+		return text.substring(LENGTH_ABBR);
+	}
+	
 	private String parseName(String line) {
 		int indexSeparator = findIndexOfElementInLine(line);
-		return indexSeparator == NOT_FOUND_INDEX ? PARSING_EMPTY_RESULT : line.substring(4, indexSeparator);
+		return indexSeparator == NOT_FOUND_INDEX ? PARSING_EMPTY_RESULT : line.substring(NAME_START_INDEX, indexSeparator);
 	}
 
 	private String parseCar(String line) {
 		int indexSeparator = findIndexOfElementInLine(line);
-		return indexSeparator == -1 ? PARSING_EMPTY_RESULT : line.substring(indexSeparator + 1);
+		return indexSeparator == NOT_FOUND_INDEX ? PARSING_EMPTY_RESULT : line.substring(indexSeparator + 1);
 	}
 
 	private int findIndexOfElementInLine(String line) {
-		return line.indexOf(TEXT_SEPARATOR, 5);
+		return line.indexOf(TEXT_SEPARATOR, NAME_START_INDEX);
 
 	}
-//todo extract nambers to costants with names like "CAR_NAME_START_INDEX"
+
 	public Map<String, LocalDateTime> parseFileToMap(String fileName) {
 		String file = receivePath(fileName);
 		Map<String, LocalDateTime> mapAbbreviations = new HashMap<>();
 		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
 			mapAbbreviations = fileInStream
-			        .collect(Collectors.toMap(i -> parseAbbreviation(i), i -> parseStringToLocalDT(i.substring(3))));
+			        .collect(Collectors.toMap(i -> parseAbbreviation(i), i -> parseStringToLocalDT(parseTime(i))));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return mapAbbreviations;
 	}
-//todo there is no string
-	public Duration parseStringToDuration(LocalDateTime timeStart, LocalDateTime timeEnd) {
-		if (timeStart == null || timeEnd == null) {
+
+	public Duration recieveDuration(LocalDateTime timeStart, LocalDateTime timeEnd) {
+		if (timeStart==null || timeEnd==null) {
 			return Duration.ZERO;
 		}
 		return Duration.between(timeStart, timeEnd);

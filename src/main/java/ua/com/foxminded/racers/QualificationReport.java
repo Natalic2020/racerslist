@@ -10,6 +10,8 @@ import java.util.stream.IntStream;
 
 public class QualificationReport {
 
+	public static final int AMOUNT_RACERS_FOR_Q2 = 15;
+	
 	public String buildRaceReport(String fileStart, String fileEnd, String fileAbbreviations) throws FileNotFoundException {
 		FileReportParser parsingReader = new FileReportParser();
 
@@ -29,7 +31,7 @@ public class QualificationReport {
 				.stream()
 				.map(s ->
 				{
-					s.setBestTime(reportParser.parseStringToDuration(mapStart.get(s.getAbbr()),
+					s.setBestTime(reportParser.recieveDuration(mapStart.get(s.getAbbr()),
 							mapEnd.get(s.getAbbr())));
 					return s;
 				})
@@ -44,11 +46,14 @@ public class QualificationReport {
 	}
 
 	protected String formOutputListRacers(List<RacerData> racerDataList) {
-		String first15 = formOutputListRacers(racerDataList, 1, 15);
+		if (racerDataList.size() < AMOUNT_RACERS_FOR_Q2) {
+			return String.format("%s", formOutputListRacers(racerDataList, 1, racerDataList.size()));
+		}
+		String racersForQ2 = formOutputListRacers(racerDataList, 1, AMOUNT_RACERS_FOR_Q2);
 		String separator = String.format("%s%n", "*----------------------------------------------------------------");
-		String last = formOutputListRacers(racerDataList, 16, racerDataList.size());
+		String lastRacers = formOutputListRacers(racerDataList, AMOUNT_RACERS_FOR_Q2 + 1, racerDataList.size());
 
-		return String.format("%s%s%s", first15, separator, last);
+		return String.format("%s%s%s", racersForQ2, separator, lastRacers);
 	}
 
 	private String formOutputListRacers(List<RacerData> racerDataList, int start, int end) {
