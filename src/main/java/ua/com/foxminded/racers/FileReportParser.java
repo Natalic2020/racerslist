@@ -24,26 +24,26 @@ public class FileReportParser {
 	public static final int ABBR_START_INDEX = 0;
 	public static final int NAME_START_INDEX = 4;
 
-	protected List<RacerData> parseRacerData(String fileName) {
+	protected List<RacerData> parseRacersData(String fileName) {
 		List<String> rawRacersData = readFileToLines(fileName);
-		List<RacerData> racersData = parseRacerData(rawRacersData);
+		List<RacerData> racersData = parseRacersRawData(rawRacersData);
 		return racersData;
 	}
 
-	protected Map<String, LocalDateTime> parseFileToMap(String fileName) {
+	protected Map<String, LocalDateTime> parseTimeData(String fileName) {
 		List<String> rawRacersTime = readFileToLines(fileName);
-		Map<String, LocalDateTime> mapTime = parseTimeToMap(rawRacersTime);
+		Map<String, LocalDateTime> mapTime = parseTimeRawData(rawRacersTime);
 		return mapTime;
 	}
 	
-	private Map<String, LocalDateTime> parseTimeToMap(List<String> rawRacersTime){
+	private Map<String, LocalDateTime> parseTimeRawData(List<String> rawRacersTime){
 		Map<String, LocalDateTime> mapTime = new HashMap<>();
 		mapTime = rawRacersTime.stream()
 		        .collect(Collectors.toMap(i -> parseAbbreviation(i), i -> parseStringToLocalDT(parseTime(i))));
 		return mapTime;
 	}
 	
-	private List<RacerData> parseRacerData(List<String> rawData) {
+	private List<RacerData> parseRacersRawData(List<String> rawData) {
 		List<RacerData> racerDataList = new ArrayList<RacerData>();
 		racerDataList = rawData.stream()
 		        .map(this::parseRacer)
@@ -62,7 +62,7 @@ public class FileReportParser {
 		return rawData;
 	}
 	
-	public RacerData parseRacer (String text) {
+	public RacerData parseRacer(String text) {
 		return new RacerData(parseAbbreviation(text), parseName(text), parseCar(text));
 	}
 

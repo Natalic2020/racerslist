@@ -14,9 +14,9 @@ public class QualificationReport {
 	public String buildRaceReport(String fileStart, String fileEnd, String fileAbbreviations)  {
 		FileReportParser parsingReader = new FileReportParser();
 
-		List<RacerData> racerDataList = parsingReader.parseRacerData(fileAbbreviations);
-		Map<String, LocalDateTime> mapStart = parsingReader.parseFileToMap(fileStart);
-		Map<String, LocalDateTime> mapEnd = parsingReader.parseFileToMap(fileEnd);
+		List<RacerData> racerDataList = parsingReader.parseRacersData(fileAbbreviations);
+		Map<String, LocalDateTime> mapStart = parsingReader.parseTimeData(fileStart);
+		Map<String, LocalDateTime> mapEnd = parsingReader.parseTimeData(fileEnd);
 
 		List<RacerData> racerData = fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		return formOutputListRacers(racerData);
