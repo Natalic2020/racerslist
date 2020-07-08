@@ -1,7 +1,5 @@
 package ua.com.foxminded.racers;
 
-import java.io.FileNotFoundException;
-
 public class Application {
 
 	public static void main(String[] args)  {
@@ -17,8 +15,6 @@ public class Application {
 
 		} catch (IllegalArgumentException e) {
 			System.out.println("Invalid  input:\"" + e.getMessage() + "\"");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		}
 	}
 }

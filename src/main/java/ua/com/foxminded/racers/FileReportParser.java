@@ -24,30 +24,44 @@ public class FileReportParser {
 	public static final int ABBR_START_INDEX = 0;
 	public static final int NAME_START_INDEX = 4;
 
-	public List<RacerData> parseRacerData(String fileName) {
+	protected List<RacerData> parseRacerData(String fileName) {
 		List<String> rawRacersData = readFileToLines(fileName);
 		List<RacerData> racersData = parseRacerData(rawRacersData);
-		/*String file = receivePath(fileName);
-		List<RacerData> racerDataList;
-		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
-			racerDataList = fileInStream
-			        .map(this::parseRacer)
-			        .collect(Collectors.toList());
-		} catch (IOException e) {
-			racerDataList = new ArrayList<>();
-			e.printStackTrace();
-		}*/
 		return racersData;
 	}
 
-	private List<RacerData> parseRacerData(List<String> rawData) {
-		return null;
+	protected Map<String, LocalDateTime> parseFileToMap(String fileName) {
+		List<String> rawRacersTime = readFileToLines(fileName);
+		Map<String, LocalDateTime> mapTime = parseTimeToMap(rawRacersTime);
+		return mapTime;
 	}
+	
+	private Map<String, LocalDateTime> parseTimeToMap(List<String> rawRacersTime){
+		Map<String, LocalDateTime> mapTime = new HashMap<>();
+		mapTime = rawRacersTime.stream()
+		        .collect(Collectors.toMap(i -> parseAbbreviation(i), i -> parseStringToLocalDT(parseTime(i))));
+		return mapTime;
+	}
+	
+	private List<RacerData> parseRacerData(List<String> rawData) {
+		List<RacerData> racerDataList = new ArrayList<RacerData>();
+		racerDataList = rawData.stream()
+		        .map(this::parseRacer)
+		        .collect(Collectors.toList());
+		return racerDataList;
+	}	
 
 	private List<String> readFileToLines(String fileName) {
-		return null;
+    	List<String> rawData = new ArrayList<String>();
+    	String file = receivePath(fileName);
+		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
+			rawData = fileInStream.collect(Collectors.toList());	
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return rawData;
 	}
-
+	
 	public RacerData parseRacer (String text) {
 		return new RacerData(parseAbbreviation(text), parseName(text), parseCar(text));
 	}
@@ -73,18 +87,6 @@ public class FileReportParser {
 	private int findIndexOfElementInLine(String line) {
 		return line.indexOf(TEXT_SEPARATOR, NAME_START_INDEX);
 
-	}
-
-	public Map<String, LocalDateTime> parseFileToMap(String fileName) {
-		String file = receivePath(fileName);
-		Map<String, LocalDateTime> mapAbbreviations = new HashMap<>();
-		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
-			mapAbbreviations = fileInStream
-			        .collect(Collectors.toMap(i -> parseAbbreviation(i), i -> parseStringToLocalDT(parseTime(i))));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return mapAbbreviations;
 	}
 
 	public Duration recieveDuration(LocalDateTime timeStart, LocalDateTime timeEnd) {

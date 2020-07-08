@@ -1,6 +1,5 @@
 package ua.com.foxminded.racers;
 
-import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -12,7 +11,7 @@ public class QualificationReport {
 
 	public static final int AMOUNT_RACERS_FOR_Q2 = 15;
 	
-	public String buildRaceReport(String fileStart, String fileEnd, String fileAbbreviations) throws FileNotFoundException {
+	public String buildRaceReport(String fileStart, String fileEnd, String fileAbbreviations)  {
 		FileReportParser parsingReader = new FileReportParser();
 
 		List<RacerData> racerDataList = parsingReader.parseRacerData(fileAbbreviations);
