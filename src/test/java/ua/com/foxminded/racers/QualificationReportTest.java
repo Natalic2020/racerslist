@@ -53,9 +53,9 @@ class QualificationReportTest {
 		mapEnd.put("LFR", LocalDateTime.of(2018, 05, 24, 12, 4, 1, 100000000));
 		mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
-
-		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		String expected = "[Sergey             | RENAULT                       | 10:0.258, Daniel             | MERCEDES                      | 15:2.252]";
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
+		
 		assertEquals(expected, actual.toString());
 	}
 
@@ -73,9 +73,10 @@ class QualificationReportTest {
 		mapEnd.put("LFR", null);
 		mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
-
-		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
+		
 		String expected = "[Sergey             | RENAULT                       | 10:0.258, Daniel             | MERCEDES                      | 15:2.252]";
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
+		
 		assertEquals(expected, actual.toString());
 	}
 
@@ -94,9 +95,10 @@ class QualificationReportTest {
 		mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
 
-		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		String expected = "[Lewis              | FERRARI                       | 4:1.1,"
 		        + " Sergey             | RENAULT                       | 10:0.258]";
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
+		
 		assertEquals(expected, actual.toString());
 	}
 
@@ -115,9 +117,10 @@ class QualificationReportTest {
 		mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
 
-		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		String expected = "[Lewis              | FERRARI                       | 4:1.1,"
 		        + " Sergey             | RENAULT                       | 10:0.258]";
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
+		
 		assertEquals(expected, actual.toString());
 	}
 
@@ -136,8 +139,9 @@ class QualificationReportTest {
 		mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
 
-		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		String expected = "[Lewis              | FERRARI                       | 4:1.1, Sergey             | RENAULT                       | 10:0.258]";
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
+		
 		assertEquals(expected, actual.toString());
 	}
 
@@ -153,8 +157,9 @@ class QualificationReportTest {
 		mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
 
-		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		String expected = "[]";
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
+		
 		assertEquals(expected, actual.toString());
 	}
 	
@@ -170,8 +175,9 @@ class QualificationReportTest {
 		mapStart.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 0, 0, 0));
 		Map<String, LocalDateTime> mapEnd = new HashMap<>();
 
-		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		String expected = "[]";
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
+		
 		assertEquals(expected, actual.toString());
 	}
 	
@@ -190,8 +196,9 @@ class QualificationReportTest {
 		mapEnd.put("DMK", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
 
-		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		String expected = "[Lewis              | FERRARI                       | 4:1.1, Sergey             | RENAULT                       | 10:0.258]";
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
+		
 		assertEquals(expected, actual.toString());
 	}
 
@@ -207,8 +214,9 @@ class QualificationReportTest {
 		mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
 		mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
 
-		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 		String expected = "[]";
+		List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
+		
 		assertEquals(expected, actual.toString());
 	}
 
@@ -226,11 +234,13 @@ class QualificationReportTest {
 		racerDataList.add(racerData2);
 		racerDataList.add(racerData3);
 		
-		String actual = racersList.formOutputListRacers(racerDataList);
+		
 		String expected = String.format("%s%n%s%n%s%n",
 				" 1. Daniel             | MERCEDES                      | 24H",
 				" 2. Lewis              | FERRARI                       | 24H",
 				" 3. Sergey             | RENAULT                       | 24H");
+		String actual = racersList.formOutputListRacers(racerDataList);
+		
 		assertEquals(expected, actual.toString());
 	}
 

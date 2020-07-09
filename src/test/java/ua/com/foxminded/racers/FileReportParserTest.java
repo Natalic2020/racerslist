@@ -38,17 +38,17 @@ class FileReportParserTest {
 	@Test
 	public void parseRacersData_shouldReadNameAndCar_whenInputCorrectFile() throws FileNotFoundException {
 		final String fileName = "abbr_test.txt";
-		List<RacerData> actual =  fileReportParser.parseRacersData(fileName);
 		String expected = "[Lewis Hamilton     | MERCEDES                      | 0]";
+		List<RacerData> actual =  fileReportParser.parseRacersData(fileName);
 		assertEquals(expected, actual.toString());
 	}
 
 	@Test
 	public void readFileToLines_shouldReadFileToList_whenInputCorrect() {
 		final String fileName = "abbr_test.txt";
-		List<String> actual =  fileReportParser.readFileToLines(fileName);
 		List<String> expected = new ArrayList<>();
 		expected.add("LHM_Lewis Hamilton_MERCEDES");
+		List<String> actual =  fileReportParser.readFileToLines(fileName);
 		assertEquals(expected, actual);
 	}
 
@@ -63,18 +63,17 @@ class FileReportParserTest {
 
 	@Test 
 	public void parseRacersRawData_shouldReturnListOfRacers_whenInputValid() {
+		List<RacerData> expected = new ArrayList<>();
+		expected.add(new RacerData("LHM", "Lewis Hamilton", "MERCEDES"));
 		List<String> rawData = new ArrayList<>();
 		rawData.add("LHM_Lewis Hamilton_MERCEDES");
 		List<RacerData> actual = fileReportParser.parseRacersRawData(rawData);
-		List<RacerData> expected = new ArrayList<>();
-		expected.add(new RacerData("LHM", "Lewis Hamilton", "MERCEDES"));
 		assertEquals(expected, actual);
 	}
 
 	@Test 
 	public void parseRacersData_shouldThrowFileNotFoundException_whenInputnotExistFile() {
 		final String fileName = "not_file.txt";
-		
 		assertThrows(IllegalArgumentException.class, () ->
 		{
 			fileReportParser.parseRacersData(fileName);
@@ -92,27 +91,28 @@ class FileReportParserTest {
 	@Test 
 	public void parseRacer_shouldReturnInstanceOfRacerData_whenInputTextWithoutOneSeparator() {
 		String text = "LHM_Lewis Hamilton";
-		RacerData expected = new RacerData("LHM", "", "");
 		RacerData actual = fileReportParser.parseRacer(text);
+		RacerData expected = new RacerData("LHM", "", "");	
 		assertEquals(expected, actual);
 	}
 	
-	@Test
+	@Test 
 	public void parseTimeData_shouldReturnHashMap_whenInputFileWithRightFormatedDataTime() {
 		final String fileName = "time_test.txt";
 		Map<String, LocalDateTime> actual =  fileReportParser.parseTimeData(fileName);
 		assertEquals("java.util.HashMap", actual.getClass().getName());
 	}
 
-	@Test //todo
+	@Test //TODO
 	public void parseTimeRawData_shouldReturnMapTime_whenInputIsValid() {
+		Map<String, LocalDateTime> expected = new HashMap<>();
+		expected.put("SVF", LocalDateTime.parse("2018-05-24 12:02:58.917",
+				DateTimeFormatter.ofPattern(PATTERN_DATA_TIME)));
 		List<String> rawData = new ArrayList<>();
 		rawData.add("SVF2018-05-24_12:02:58.917");
 		Map<String, LocalDateTime> actual = fileReportParser.parseTimeRawData(rawData);
-		Map<String, LocalDateTime> expected = new HashMap<>();
-		expected.put("SVF", LocalDateTime.parse("2018-05-24_12:02:58.917",
-				DateTimeFormatter.ofPattern(PATTERN_DATA_TIME)));
-		assertEquals(expected.toString(), actual.toString());
+		
+		assertEquals(expected.get("SVF"), actual.get("SVF"));
 	}
 
 	@Test
