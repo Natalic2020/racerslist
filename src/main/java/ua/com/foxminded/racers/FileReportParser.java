@@ -36,14 +36,14 @@ public class FileReportParser {
 		return mapTime;
 	}
 	
-	private Map<String, LocalDateTime> parseTimeRawData(List<String> rawRacersTime){
+	Map<String, LocalDateTime> parseTimeRawData(List<String> rawRacersTime){
 		Map<String, LocalDateTime> mapTime = new HashMap<>();
 		mapTime = rawRacersTime.stream()
 		        .collect(Collectors.toMap(i -> parseAbbreviation(i), i -> parseStringToLocalDT(parseTime(i))));
 		return mapTime;
 	}
 	
-	private List<RacerData> parseRacersRawData(List<String> rawData) {
+	List<RacerData> parseRacersRawData(List<String> rawData) {
 		List<RacerData> racerDataList = new ArrayList<RacerData>();
 		racerDataList = rawData.stream()
 		        .map(this::parseRacer)
@@ -51,7 +51,7 @@ public class FileReportParser {
 		return racerDataList;
 	}	
 
-	private List<String> readFileToLines(String fileName) {
+	protected List<String> readFileToLines(String fileName) {
     	List<String> rawData = new ArrayList<String>();
     	String file = receivePath(fileName);
 		try (Stream<String> fileInStream = Files.lines(Paths.get(file))) {
@@ -110,7 +110,7 @@ public class FileReportParser {
 		}
 	}
 
-	private String receivePath(String fileName) {
+	String receivePath(String fileName) {
 		checkFileName(fileName);
 
 		ClassLoader classLoader = getClass().getClassLoader();

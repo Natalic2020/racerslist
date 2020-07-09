@@ -1,10 +1,12 @@
 package ua.com.foxminded.racers;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,10 +14,11 @@ import org.junit.jupiter.api.Test;
 
 class FileReportParserTest {
 
+	private static final String PATTERN_DATA_TIME = "yyyy-MM-dd HH:mm:ss.SSS";
 	FileReportParser fileReportParser	= new FileReportParser();
 	
-	@Test // todo test for checkFileName()
-	public void formRacersList_shouldThrowIllegalArgumentException_whenInputNull() {
+	@Test 
+	public void checkFileName_shouldThrowIllegalArgumentException_whenInputNull() {
 		final String absolutePathStart = null;
 		assertThrows(IllegalArgumentException.class, () ->
 			{
@@ -23,8 +26,8 @@ class FileReportParserTest {
 			});
 	}
 
-	@Test// todo test for checkFileName()
-	public void formRacersList_shouldThrowIllegalArgumentException_whenInputEmptyString() {
+	@Test
+	public void checkFileNamet_shouldThrowIllegalArgumentException_whenInputEmptyString() {
 		final String absolutePathStart = "";
 		assertThrows(IllegalArgumentException.class, () ->
 			{
@@ -32,39 +35,44 @@ class FileReportParserTest {
 			});
 	}
 	
-	@Test // todo test for parseRacersData()
-	public void parseFileToListRacerData_shouldReadNameAndCar_whenInputCorrectFile() throws FileNotFoundException {
+	@Test
+	public void parseRacersData_shouldReadNameAndCar_whenInputCorrectFile() throws FileNotFoundException {
 		final String fileName = "abbr_test.txt";
 		List<RacerData> actual =  fileReportParser.parseRacersData(fileName);
 		String expected = "[Lewis Hamilton     | MERCEDES                      | 0]";
 		assertEquals(expected, actual.toString());
 	}
-	
-	@Test // todo delete, this case test in other method
-	public void parseFileToListRacerData_shouldReturnEmptyArray_whenInputEmptyFile() {
-		String fileName = "empty.txt";	
-		List<RacerData> actual =  fileReportParser.parseRacersData(fileName);
-		String expected = "[]";
-		assertEquals(expected, actual.toString());
-	}
 
-	@Test // todo implement
+	@Test
 	public void readFileToLines_shouldReadFileToList_whenInputCorrect() {
-
+		final String fileName = "abbr_test.txt";
+		List<String> actual =  fileReportParser.readFileToLines(fileName);
+		List<String> expected = new ArrayList<>();
+		expected.add("LHM_Lewis Hamilton_MERCEDES");
+		assertEquals(expected, actual);
 	}
 
-	@Test // todo implement
-	public void readFileToLines_shouldReturnEmptyList_whenInputFileIsNotValid() {
-
+	@Test 
+	public void readFileToLines_shouldThrowIllegalArgumentException_whenInputFileIsNotValid() {
+		final String fileName = "not_file.txt";
+		assertThrows(IllegalArgumentException.class, () ->
+		{
+			fileReportParser.readFileToLines(fileName);
+		});
 	}
 
-	@Test // todo implement
+	@Test 
 	public void parseRacersRawData_shouldReturnListOfRacers_whenInputValid() {
-
+		List<String> rawData = new ArrayList<>();
+		rawData.add("LHM_Lewis Hamilton_MERCEDES");
+		List<RacerData> actual = fileReportParser.parseRacersRawData(rawData);
+		List<RacerData> expected = new ArrayList<>();
+		expected.add(new RacerData("LHM", "Lewis Hamilton", "MERCEDES"));
+		assertEquals(expected, actual);
 	}
 
-	@Test // todo test for parseRacersData()
-	public void parseFileToListRacerData_shouldThrowFileNotFoundException_whenInputnotExistFile() {
+	@Test 
+	public void parseRacersData_shouldThrowFileNotFoundException_whenInputnotExistFile() {
 		final String fileName = "not_file.txt";
 		
 		assertThrows(IllegalArgumentException.class, () ->
@@ -73,54 +81,76 @@ class FileReportParserTest {
 		});
 	}
 	
-	@Test // todo compare objects
+	@Test 
 	public void parseRacer_shouldReturnInstanceOfRacerData_whenInputRightText() {
 		String text = "LHM_Lewis Hamilton_MERCEDES";
+		RacerData expected = new RacerData("LHM", "Lewis Hamilton", "MERCEDES");
 		RacerData actual = fileReportParser.parseRacer(text);
-		assertEquals("ua.com.foxminded.racers.RacerData", actual.getClass().getName());
+		assertEquals(expected, actual);
 	}
 	
-	@Test //todo compare objects
+	@Test 
 	public void parseRacer_shouldReturnInstanceOfRacerData_whenInputTextWithoutOneSeparator() {
 		String text = "LHM_Lewis Hamilton";
+		RacerData expected = new RacerData("LHM", "", "");
 		RacerData actual = fileReportParser.parseRacer(text);
-		assertEquals("ua.com.foxminded.racers.RacerData", actual.getClass().getName());
+		assertEquals(expected, actual);
 	}
 	
-	@Test// todo rename, test for parseTimeData(), comapre objects
-	public void parseFileToMap_shouldReturnHashMap_whenInputFileWithRightFormatedDataTime() {
+	@Test
+	public void parseTimeData_shouldReturnHashMap_whenInputFileWithRightFormatedDataTime() {
 		final String fileName = "time_test.txt";
 		Map<String, LocalDateTime> actual =  fileReportParser.parseTimeData(fileName);
 		assertEquals("java.util.HashMap", actual.getClass().getName());
 	}
 
-	@Test
+	@Test //todo
 	public void parseTimeRawData_shouldReturnMapTime_whenInputIsValid() {
-
+		List<String> rawData = new ArrayList<>();
+		rawData.add("SVF2018-05-24_12:02:58.917");
+		Map<String, LocalDateTime> actual = fileReportParser.parseTimeRawData(rawData);
+		Map<String, LocalDateTime> expected = new HashMap<>();
+		expected.put("SVF", LocalDateTime.parse("2018-05-24_12:02:58.917",
+				DateTimeFormatter.ofPattern(PATTERN_DATA_TIME)));
+		assertEquals(expected.toString(), actual.toString());
 	}
 
-	@Test// todo rename,  test case when input "2018-05-24_12:02:58.917"
-	public void parseTimeRawData_should_whenInputWithoutAbbreviation() {
-
-	}
-
-	@Test// todo rename,  test case when input "12:02:58.917"
-	public void parseTimeRawData_should_whenInputWithoutDate() {
-
-	}
-
-	@Test// todo rename,  test case when input "2018-05-24"
-	public void parseTimeRawData_should_whenInputWithoutTime() {
-
-	}
-
-		// todo test annotation missed, but anyway it should be tested in another way
-	public void parseFileToMap_shouldThrowException_whenInputFileWithBrokenDataTime() {
-		final String fileName = "time_brocken.txt";
-		
+	@Test
+	public void parseTimeRawData_shouldThrowDateTimeParseException_whenInputWithoutAbbreviation() {
+		List<String> rawData = new ArrayList<>();
+		rawData.add("2018-05-24_12:02:58.917");
 		assertThrows(DateTimeParseException.class, () ->
 		{
-			fileReportParser.parseTimeData(fileName);
+			fileReportParser.parseTimeRawData(rawData);
+		});
+	}
+
+	@Test
+	public void parseTimeRawData_shouldThrowDateTimeParseException_whenInputWithoutDate() {
+		List<String> rawData = new ArrayList<>();
+		rawData.add("SVF12:02:58.917");
+		assertThrows(DateTimeParseException.class, () ->
+		{
+			fileReportParser.parseTimeRawData(rawData);
+		});
+	}
+
+	@Test
+	public void parseTimeRawData_shouldThrowDateTimeParseException_whenInputWithoutTime() {
+		List<String> rawData = new ArrayList<>();
+		rawData.add("SVF2018-05-24");
+		assertThrows(DateTimeParseException.class, () ->
+		{
+			fileReportParser.parseTimeRawData(rawData);
+		});
+	}
+
+	@Test
+	public void receivePath_shouldThrowIllegalArgumentException_whenInputFileWithBrokenDataTime() {
+		final String fileName = "time_brocken.txt";
+		assertThrows(IllegalArgumentException.class, () ->
+		{
+			fileReportParser.receivePath(fileName);
 		});
 	}
 }

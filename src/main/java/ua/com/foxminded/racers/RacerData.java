@@ -59,4 +59,47 @@ public class RacerData {
 		        .replace("M", ":")
 		        .replace("S", ""));
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((abbr == null) ? 0 : abbr.hashCode());
+		result = prime * result + ((bestTime == null) ? 0 : bestTime.hashCode());
+		result = prime * result + ((car == null) ? 0 : car.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RacerData other = (RacerData) obj;
+		if (abbr == null) {
+			if (other.abbr != null)
+				return false;
+		} else if (!abbr.equals(other.abbr))
+			return false;
+		if (bestTime == null) {
+			if (other.bestTime != null)
+				return false;
+		} else if (!bestTime.equals(other.bestTime))
+			return false;
+		if (car == null) {
+			if (other.car != null)
+				return false;
+		} else if (!car.equals(other.car))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
 }
