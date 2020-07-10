@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class FileReportParserTest {
@@ -39,7 +40,9 @@ class FileReportParserTest {
 	public void parseRacersData_shouldReadNameAndCar_whenInputCorrectFile(){
 		final String fileName = "abbr_test.txt";
 		String expected = "[Lewis Hamilton     | MERCEDES                      | 0]";
+		
 		List<RacerData> actual =  fileReportParser.parseRacersData(fileName);
+		
 		assertEquals(expected, actual.toString());
 	}
 
@@ -67,9 +70,12 @@ class FileReportParserTest {
 	public void parseRacersRawData_shouldReturnListOfRacers_whenInputValid() {
 		List<RacerData> expected = new ArrayList<>();
 		expected.add(new RacerData("LHM", "Lewis Hamilton", "MERCEDES"));
+		
 		List<String> rawData = new ArrayList<>();
 		rawData.add("LHM_Lewis Hamilton_MERCEDES");
+		
 		List<RacerData> actual = fileReportParser.parseRacersRawData(rawData);
+		
 		assertEquals(expected, actual);
 	}
 
@@ -86,7 +92,9 @@ class FileReportParserTest {
 	public void parseRacer_shouldReturnInstanceOfRacerData_whenInputRightText() {
 		String text = "LHM_Lewis Hamilton_MERCEDES";
 		RacerData expected = new RacerData("LHM", "Lewis Hamilton", "MERCEDES");
+		
 		RacerData actual = fileReportParser.parseRacer(text);
+		
 		assertEquals(expected, actual);
 	}
 	
@@ -94,27 +102,37 @@ class FileReportParserTest {
 	public void parseRacer_shouldReturnInstanceOfRacerData_whenInputTextWithoutOneSeparator() {
 		String text = "LHM_Lewis Hamilton";
 		RacerData expected = new RacerData("LHM", "", "");
+		
 		RacerData actual = fileReportParser.parseRacer(text);
+		
 		assertEquals(expected, actual);
 	}
 	
-	@Test // todo compare maps in assertion
+	@Test 
 	public void parseTimeData_shouldReturnHashMap_whenInputFileWithRightFormatedDataTime() {
 		final String fileName = "time_test.txt";
+		Map<String, LocalDateTime> expected = new HashMap<>();
+		
+		expected.put("SVF", LocalDateTime.parse("2018-05-24 12:02:58.917",
+				DateTimeFormatter.ofPattern(PATTERN_DATA_TIME)));
+		
 		Map<String, LocalDateTime> actual =  fileReportParser.parseTimeData(fileName);
-		assertEquals("java.util.HashMap", actual.getClass().getName());
+		
+		Assertions.assertEquals(expected, actual);
 	}
 
-	@Test //TODO compare maps??
+	@Test
 	public void parseTimeRawData_shouldReturnMapTime_whenInputIsValid() {
 		Map<String, LocalDateTime> expected = new HashMap<>();
 		expected.put("SVF", LocalDateTime.parse("2018-05-24 12:02:58.917",
 				DateTimeFormatter.ofPattern(PATTERN_DATA_TIME)));
+		
 		List<String> rawData = new ArrayList<>();
 		rawData.add("SVF2018-05-24_12:02:58.917");
+		
 		Map<String, LocalDateTime> actual = fileReportParser.parseTimeRawData(rawData);
 		
-		assertEquals(expected.get("SVF"), actual.get("SVF"));
+		Assertions.assertEquals(expected, actual);
 	}
 
 	@Test
