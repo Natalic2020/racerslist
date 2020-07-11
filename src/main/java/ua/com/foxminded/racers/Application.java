@@ -8,7 +8,7 @@ public class Application {
         String fileEnd = "end.log";
         String fileAbbr = "abbreviations.txt";
 
-        QualificationReport raceReport = new QualificationReport();
+        QualificationReport raceReport = new QualificationReport(new FileReportParser());
 
         try {
             System.out.print(raceReport.buildRaceReport(fileStart, fileEnd, fileAbbr));

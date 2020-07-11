@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 class QualificationReportTest {
 
-    QualificationReport racersList = new QualificationReport();
+    QualificationReport racersList = new QualificationReport(new FileReportParser());
 
     @Test
     public void fillRacerListWithTime_shouldSortRacers_whenInputUnsortRacers() {
