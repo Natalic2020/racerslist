@@ -31,7 +31,6 @@ public class QualificationReport {
     protected List<RacerData> fillRacerListWithTime(List<RacerData> racerDataList, Map<String, LocalDateTime> mapStart,
             Map<String, LocalDateTime> mapEnd) {
 
-  //      FileReportParser reportParser = new FileReportParser();
         List<RacerData> racerDataListSorted = racerDataList.stream().map(s ->
             {
                 s.setBestTime(reportParser.recieveDuration(mapStart.get(s.getAbbr()), mapEnd.get(s.getAbbr())));

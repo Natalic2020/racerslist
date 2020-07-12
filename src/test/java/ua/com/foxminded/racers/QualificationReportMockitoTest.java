@@ -10,13 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class QualificationReportMockitoTest {
     
     @Mock 
@@ -40,15 +37,24 @@ class QualificationReportMockitoTest {
         mapEnd.put("LFR", LocalDateTime.of(2018, 05, 24, 12, 4, 1, 100000000));
         mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
         mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
-
-        List<RacerData> expected = new ArrayList<RacerData>();
-        expected.add(new RacerData("DMR", "Daniel", "MERCEDES", Duration.parse("PT4M1.1S")));
-        expected.add(new RacerData("LFR", "Lewis", "FERRARI", Duration.parse("PT10M0.258S")));
-        expected.add(new RacerData("SRN", "Sergey", "RENAULT", Duration.parse("PT15M2.252S")));
           
-        Mockito.when(racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd)).thenReturn(expected);
-        Mockito.verify(racersList).fillRacerListWithTime(racerDataList, mapStart, mapEnd);
+        String expected = "[Lewis              | FERRARI                       | 4:1.1,"
+                + " Sergey             | RENAULT                       | 10:0.258,"
+                + " Daniel             | MERCEDES                      | 15:2.252]";
+        
+        FileReportParser reportParser = Mockito.mock(FileReportParser.class);
+        racersList = new QualificationReport(reportParser);
+        
+        Mockito.when(reportParser.recieveDuration(LocalDateTime.of(2018, 05, 24, 12, 0, 0, 0),
+                LocalDateTime.of(2018, 05, 24, 12, 4, 1, 100000000))).thenReturn(Duration.parse("PT4M1.1S"));
+        Mockito.when(reportParser.recieveDuration(LocalDateTime.of(2018, 05, 24, 13, 0, 0, 0),
+                LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000))).thenReturn(Duration.parse("PT15M2.252S"));
+        Mockito.when(reportParser.recieveDuration(LocalDateTime.of(2018,  05, 24, 14, 0, 0, 0),
+                LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000))).thenReturn(Duration.parse("PT10M0.258S"));
+        
+        List<RacerData> actual = racersList.fillRacerListWithTime(racerDataList, mapStart, mapEnd);
 
+        assertEquals(expected, actual.toString());
     }
 }
 
