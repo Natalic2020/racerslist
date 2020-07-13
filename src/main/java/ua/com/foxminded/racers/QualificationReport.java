@@ -18,7 +18,7 @@ public class QualificationReport {
     }
     
     public String buildRaceReport(String fileStart, String fileEnd, String fileAbbreviations) {
-        FileReportParser reportParser = new FileReportParser();
+//        FileReportParser reportParser = new FileReportParser();
 
         List<RacerData> racerDataList = reportParser.parseRacersData(fileAbbreviations);
         Map<String, LocalDateTime> mapStart = reportParser.parseTimeData(fileStart);
