@@ -52,8 +52,10 @@ public class RacerData {
         return bestTime;
     }
 
-    public void setBestTime(Duration bestTime) {
+    public RacerData setBestTime(Duration bestTime) {
         this.bestTime = bestTime;
+        return this;
+        
     }
 
     @Override

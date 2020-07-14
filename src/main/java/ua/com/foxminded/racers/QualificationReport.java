@@ -31,24 +31,24 @@ public class QualificationReport {
     protected List<RacerData> fillRacerListWithTime(List<RacerData> racerDataList, Map<String, LocalDateTime> mapStart,
             Map<String, LocalDateTime> mapEnd) {
 
-        List<RacerData> racerDataListSorted = racerDataList.stream().map(s ->
-            {
-                if (mapStart.get(s.getAbbr()) != null && mapEnd.get(s.getAbbr()) != null) { 
-                s.setBestTime(Duration.between(mapStart.get(s.getAbbr()), mapEnd.get(s.getAbbr())));
-               }
-                else {
-                    s.setBestTime(Duration.ZERO);  
-                }
-                return s;
-                })
+        List<RacerData> racerDataListSorted = racerDataList.stream()
+            .map(racer -> racer.setBestTime(recieveDuration(mapStart,mapEnd,racer)))
             .filter(racer -> !racer.getAbbr().isEmpty())
             .filter(racer -> !racer.getName().isEmpty())
             .filter(racer -> !racer.getCar().isEmpty())
             .filter(racer -> !racer.getBestTime().isZero())
-            .sorted(Comparator.comparing(RacerData::getBestTime))
+            .sorted(Comparator.comparing(RacerData :: getBestTime))
             .collect(Collectors.toList());
-
         return racerDataListSorted;
+    }
+    
+    public Duration recieveDuration(Map<String, LocalDateTime> mapStart, Map<String, LocalDateTime> mapEnd, RacerData racer) {
+        LocalDateTime timeStart = mapStart.get(racer.getAbbr());
+        LocalDateTime timeEnd = mapEnd.get(racer.getAbbr());
+        if (timeStart == null || timeEnd == null) {
+            return Duration.ZERO;
+        }
+        return Duration.between(timeStart, timeEnd);
     }
 
     protected String formOutputListRacers(List<RacerData> racerDataList) {

@@ -1,6 +1,7 @@
 package ua.com.foxminded.racers;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ class QualificationReportMockitoRunWithTest {
         mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
         
         Mockito.when(reportParser.parseRacersData("abbr.file")).thenReturn(racerDataList);
-        Mockito.when(reportParser.parseTimeData(Mockito.anyString())).thenReturn(mapStart).thenReturn(mapEnd);         
+        Mockito.when(reportParser.parseTimeData(anyString())).thenReturn(mapStart).thenReturn(mapEnd);         
     }
     
     @Test
