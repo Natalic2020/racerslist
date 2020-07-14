@@ -1,5 +1,6 @@
 package ua.com.foxminded.racers;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -33,7 +34,7 @@ public class QualificationReport {
 
         List<RacerData> racerDataListSorted = racerDataList.stream().map(s ->
             {
-                s.setBestTime(reportParser.recieveDuration(mapStart.get(s.getAbbr()), mapEnd.get(s.getAbbr())));
+                s.setBestTime(Duration.between(mapStart.get(s.getAbbr()), mapEnd.get(s.getAbbr())));
                 return s;
             })
             .filter(racer -> !racer.getAbbr().isEmpty())

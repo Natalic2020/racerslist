@@ -2,7 +2,6 @@ package ua.com.foxminded.racers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,41 +41,19 @@ class QualificationReportMockitoRunWithTest {
         mapEnd.put("DMR", LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000));
         mapEnd.put("SRN", LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000));
         
-        Mockito.lenient().when(reportParser.parseRacersData("abbr.file")).thenReturn(racerDataList);
-        Mockito.lenient().when(reportParser.parseTimeData("start.file")).thenReturn(mapStart);
-        Mockito.lenient().when(reportParser.parseTimeData("end.file")).thenReturn(mapEnd);   
-        
-        Mockito.lenient().when(reportParser.recieveDuration(LocalDateTime.of(2018, 05, 24, 12, 0, 0, 0),
-                LocalDateTime.of(2018, 05, 24, 12, 4, 1, 100000000))).thenReturn(Duration.parse("PT4M1.1S"));
-        Mockito.lenient().when(reportParser.recieveDuration(null,
-                LocalDateTime.of(2018, 05, 24, 12, 4, 1, 100000000))).thenReturn(Duration.ZERO);
-        Mockito.lenient().when(reportParser.recieveDuration(LocalDateTime.of(2018, 05, 24, 12, 0, 0, 0),
-               null)).thenReturn(Duration.ZERO); 
-        
-        Mockito.lenient().when(reportParser.recieveDuration(LocalDateTime.of(2018, 05, 24, 13, 0, 0, 0),
-                LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000))).thenReturn(Duration.parse("PT15M2.252S"));
-        Mockito.lenient().when(reportParser.recieveDuration(null,
-                LocalDateTime.of(2018, 05, 24, 13, 15, 2, 252000000))).thenReturn(Duration.ZERO);
-        Mockito.lenient().when(reportParser.recieveDuration(LocalDateTime.of(2018, 05, 24, 13, 0, 0, 0),
-                null)).thenReturn(Duration.ZERO);
-        
-        Mockito.lenient().when(reportParser.recieveDuration(LocalDateTime.of(2018,  05, 24, 14, 0, 0, 0),
-                LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000))).thenReturn(Duration.parse("PT10M0.258S"));  
-        Mockito.lenient().when(reportParser.recieveDuration(null,
-                LocalDateTime.of(2018, 05, 24, 14, 10, 0, 258000000))).thenReturn(Duration.ZERO);
-        Mockito.lenient().when(reportParser.recieveDuration(LocalDateTime.of(2018,  05, 24, 14, 0, 0, 0),
-               null)).thenReturn(Duration.ZERO);       
+        Mockito.when(reportParser.parseRacersData("abbr.file")).thenReturn(racerDataList);
+        Mockito.when(reportParser.parseTimeData(Mockito.anyString())).thenReturn(mapStart).thenReturn(mapEnd);         
     }
     
     @Test
     public void buildRaceReport_shouldSortRacers_whenInputFiles() {   
-          
+        
         String expected =String.format("%s%n%s%n%s%n",
                 " 1. Lewis              | FERRARI                       | 4:1.1", // 
                 " 2. Sergey             | RENAULT                       | 10:0.258", //  
                 " 3. Daniel             | MERCEDES                      | 15:2.252" );
         
-        String actual = racersList.buildRaceReport( "start.file", "end.file", "abbr.file");
+        String actual = racersList.buildRaceReport( toString(), toString(), "abbr.file");
 
         assertEquals(expected, actual);
     }
