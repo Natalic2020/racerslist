@@ -19,8 +19,7 @@ public class QualificationReport {
     }
     
     public String buildRaceReport(String fileStart, String fileEnd, String fileAbbreviations) {
-//        FileReportParser reportParser = new FileReportParser();
-
+        
         List<RacerData> racerDataList = reportParser.parseRacersData(fileAbbreviations);
         Map<String, LocalDateTime> mapStart = reportParser.parseTimeData(fileStart);
         Map<String, LocalDateTime> mapEnd = reportParser.parseTimeData(fileEnd);
@@ -34,9 +33,14 @@ public class QualificationReport {
 
         List<RacerData> racerDataListSorted = racerDataList.stream().map(s ->
             {
+                if (mapStart.get(s.getAbbr()) != null && mapEnd.get(s.getAbbr()) != null) { 
                 s.setBestTime(Duration.between(mapStart.get(s.getAbbr()), mapEnd.get(s.getAbbr())));
+               }
+                else {
+                    s.setBestTime(Duration.ZERO);  
+                }
                 return s;
-            })
+                })
             .filter(racer -> !racer.getAbbr().isEmpty())
             .filter(racer -> !racer.getName().isEmpty())
             .filter(racer -> !racer.getCar().isEmpty())
