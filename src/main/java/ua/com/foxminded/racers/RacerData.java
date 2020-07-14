@@ -28,24 +28,27 @@ public class RacerData {
         return abbr;
     }
 
-    public void setAbbr(String abbr) {
+    public RacerData setAbbr(String abbr) {
         this.abbr = abbr;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public RacerData setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getCar() {
         return car;
     }
 
-    public void setCar(String car) {
+    public RacerData setCar(String car) {
         this.car = car;
+        return this;
     }
 
     public Duration getBestTime() {
@@ -55,7 +58,6 @@ public class RacerData {
     public RacerData setBestTime(Duration bestTime) {
         this.bestTime = bestTime;
         return this;
-        
     }
 
     @Override
