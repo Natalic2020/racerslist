@@ -23,10 +23,6 @@ public class FileReportParser {
     public static final int LENGTH_ABBR = 3;
     public static final int ABBR_START_INDEX = 0;
     public static final int NAME_START_INDEX = 4;
-
-//    public  FileReportParser() {
-//     return new  FileReportParser();
-//    }
     
     protected List<RacerData> parseRacersData(String fileName) {
         List<String> rawRacersData = readFileToLines(fileName);
