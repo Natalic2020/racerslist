@@ -17,36 +17,47 @@ public class RacerData {
         this.bestTime = Duration.ZERO;
     }
 
+    public RacerData(String abbr, String name, String car, Duration bestTime) {
+        this.abbr = Optional.ofNullable(abbr).orElse("");
+        this.name = Optional.ofNullable(name).orElse("");
+        this.car = Optional.ofNullable(car).orElse("");
+        this.bestTime = bestTime;
+    }
+    
     public String getAbbr() {
         return abbr;
     }
 
-    public void setAbbr(String abbr) {
+    public RacerData setAbbr(String abbr) {
         this.abbr = abbr;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public RacerData setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getCar() {
         return car;
     }
 
-    public void setCar(String car) {
+    public RacerData setCar(String car) {
         this.car = car;
+        return this;
     }
 
     public Duration getBestTime() {
         return bestTime;
     }
 
-    public void setBestTime(Duration bestTime) {
+    public RacerData setBestTime(Duration bestTime) {
         this.bestTime = bestTime;
+        return this;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ua.com.foxminded.racers;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -11,12 +12,17 @@ public class QualificationReport {
 
     public static final int AMOUNT_RACERS_FOR_Q2 = 15;
 
+    FileReportParser reportParser;
+    
+    public QualificationReport(FileReportParser reportParser) {
+        this.reportParser = reportParser;
+    }
+    
     public String buildRaceReport(String fileStart, String fileEnd, String fileAbbreviations) {
-        FileReportParser parsingReader = new FileReportParser();
-
-        List<RacerData> racerDataList = parsingReader.parseRacersData(fileAbbreviations);
-        Map<String, LocalDateTime> mapStart = parsingReader.parseTimeData(fileStart);
-        Map<String, LocalDateTime> mapEnd = parsingReader.parseTimeData(fileEnd);
+        
+        List<RacerData> racerDataList = reportParser.parseRacersData(fileAbbreviations);
+        Map<String, LocalDateTime> mapStart = reportParser.parseTimeData(fileStart);
+        Map<String, LocalDateTime> mapEnd = reportParser.parseTimeData(fileEnd);
 
         List<RacerData> racerData = fillRacerListWithTime(racerDataList, mapStart, mapEnd);
         return formOutputListRacers(racerData);
@@ -25,20 +31,24 @@ public class QualificationReport {
     protected List<RacerData> fillRacerListWithTime(List<RacerData> racerDataList, Map<String, LocalDateTime> mapStart,
             Map<String, LocalDateTime> mapEnd) {
 
-        FileReportParser reportParser = new FileReportParser();
-        List<RacerData> racerDataListSorted = racerDataList.stream().map(s ->
-            {
-                s.setBestTime(reportParser.recieveDuration(mapStart.get(s.getAbbr()), mapEnd.get(s.getAbbr())));
-                return s;
-            })
+        List<RacerData> racerDataListSorted = racerDataList.stream()
+            .map(racer -> racer.setBestTime(recieveDuration(mapStart,mapEnd,racer)))
             .filter(racer -> !racer.getAbbr().isEmpty())
             .filter(racer -> !racer.getName().isEmpty())
             .filter(racer -> !racer.getCar().isEmpty())
             .filter(racer -> !racer.getBestTime().isZero())
-            .sorted(Comparator.comparing(RacerData::getBestTime))
+            .sorted(Comparator.comparing(RacerData :: getBestTime))
             .collect(Collectors.toList());
-
         return racerDataListSorted;
+    }
+    
+    public Duration recieveDuration(Map<String, LocalDateTime> mapStart, Map<String, LocalDateTime> mapEnd, RacerData racer) {
+        LocalDateTime timeStart = mapStart.get(racer.getAbbr());
+        LocalDateTime timeEnd = mapEnd.get(racer.getAbbr());
+        if (timeStart == null || timeEnd == null) {
+            return Duration.ZERO;
+        }
+        return Duration.between(timeStart, timeEnd);
     }
 
     protected String formOutputListRacers(List<RacerData> racerDataList) {
