@@ -51,7 +51,7 @@ class QualificationReportTest {
                     " 2. Sergey             | RENAULT                       | 10:0.258", //
                     " 3. Daniel             | MERCEDES                      | 15:2.252");
 
-        String actual = racersList.buildRaceReport(anyString(), toString(), toString());
+        String actual = racersList.buildRaceReport("testFileName", "testFileName", "testFileName");
 
         assertEquals(expected, actual);
     }
@@ -78,7 +78,7 @@ class QualificationReportTest {
 
         String expected = "";
 
-        String actual = racersList.buildRaceReport(anyString(), toString(), toString());
+        String actual = racersList.buildRaceReport("testFileName", "testFileName", "testFileName");
 
         assertEquals(expected, actual);
     }     
@@ -105,7 +105,7 @@ class QualificationReportTest {
 
         String expected = "";
 
-        String actual = racersList.buildRaceReport(anyString(), toString(), toString());
+        String actual = racersList.buildRaceReport("testFileName", "testFileName", "testFileName");
 
         assertEquals(expected, actual);
     }
@@ -131,7 +131,7 @@ class QualificationReportTest {
 
         String expected = "";
 
-        String actual = racersList.buildRaceReport(anyString(), toString(), toString());
+        String actual = racersList.buildRaceReport("testFileName", "testFileName", "testFileName");
 
         assertEquals(expected, actual);
     }
